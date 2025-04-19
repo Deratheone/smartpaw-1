@@ -52,6 +52,18 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+        smartpaw: {
+          purple: '#9b87f5',
+          'light-purple': '#D6BCFA',
+          'dark-purple': '#7E69AB',
+          green: '#F2FCE2',
+          yellow: '#FEF7CD',
+          orange: '#FEC6A1',
+          pink: '#FFDEE2',
+          peach: '#FDE1D3',
+          blue: '#D3E4FD',
+          gray: '#F1F0FB',
+        },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
