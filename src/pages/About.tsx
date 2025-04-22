@@ -96,7 +96,7 @@ const About = () => {
       </section>
 
       {/* Team Section */}
-      <section className="py-16 bg-white">
+      {  /* <section className="py-16 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4 text-gray-900">Meet Our Team</h2>
@@ -167,7 +167,7 @@ const About = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section>*/}
 
       {/* Testimonials */}
       <section className="py-16 bg-smartpaw-gray">
