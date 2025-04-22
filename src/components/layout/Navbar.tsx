@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Tooltip } from "@/components/ui/tooltip";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +11,14 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const ComingSoonLink = ({ children }: { children: React.ReactNode }) => (
+    <Tooltip content="Coming Soon">
+      <span className="text-gray-400 cursor-not-allowed">
+        {children}
+      </span>
+    </Tooltip>
+  );
 
   return (
     <nav className="bg-white shadow-sm py-4 sticky top-0 z-50">
@@ -25,17 +34,11 @@ const Navbar = () => {
               Home
             </Link>
             <Link to="/services" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Services
+              Pet Boarding
             </Link>
-            <Link to="/shop" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Shop
-            </Link>
-            <Link to="/monitoring" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Pet Monitoring
-            </Link>
-            <Link to="/about" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              About Us
-            </Link>
+            <ComingSoonLink>Shop</ComingSoonLink>
+            <ComingSoonLink>Pet Monitoring</ComingSoonLink>
+            <ComingSoonLink>About Us</ComingSoonLink>
             <Link to="/login">
               <Button variant="outline" className="border-smartpaw-purple text-smartpaw-purple hover:bg-smartpaw-purple hover:text-white">
                 Login
@@ -68,17 +71,11 @@ const Navbar = () => {
               Home
             </Link>
             <Link to="/services" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Services
+              Pet Boarding
             </Link>
-            <Link to="/shop" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Shop
-            </Link>
-            <Link to="/monitoring" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Pet Monitoring
-            </Link>
-            <Link to="/about" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              About Us
-            </Link>
+            <span className="text-gray-400">Shop (Coming Soon)</span>
+            <span className="text-gray-400">Pet Monitoring (Coming Soon)</span>
+            <span className="text-gray-400">About Us (Coming Soon)</span>
             <div className="flex space-x-4 pt-2">
               <Link to="/login" className="flex-1">
                 <Button variant="outline" className="w-full border-smartpaw-purple text-smartpaw-purple hover:bg-smartpaw-purple hover:text-white">
