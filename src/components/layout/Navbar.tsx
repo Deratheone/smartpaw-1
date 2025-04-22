@@ -3,7 +3,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { Tooltip } from "@/components/ui/tooltip";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,10 +18,15 @@ const Navbar = () => {
   };
 
   const ComingSoonLink = ({ children }: { children: React.ReactNode }) => (
-    <Tooltip content="Coming Soon">
-      <span className="text-gray-400 cursor-not-allowed">
-        {children}
-      </span>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="text-gray-400 cursor-not-allowed">
+          {children}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Coming Soon</p>
+      </TooltipContent>
     </Tooltip>
   );
 
