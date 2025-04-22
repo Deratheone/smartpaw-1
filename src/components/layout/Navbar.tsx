@@ -1,6 +1,6 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { 
@@ -12,6 +12,7 @@ import {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -49,16 +50,29 @@ const Navbar = () => {
             <ComingSoonLink>Shop</ComingSoonLink>
             <ComingSoonLink>Pet Monitoring</ComingSoonLink>
             <ComingSoonLink>About Us</ComingSoonLink>
-            <Link to="/login">
-              <Button variant="outline" className="border-smartpaw-purple text-smartpaw-purple hover:bg-smartpaw-purple hover:text-white">
-                Login
-              </Button>
-            </Link>
-            <Link to="/register">
-              <Button className="bg-smartpaw-purple text-white hover:bg-smartpaw-dark-purple">
-                Register
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <button
+                  onClick={() => signOut()}
+                  className="text-gray-700 hover:text-smartpaw-purple transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" className="border-smartpaw-purple text-smartpaw-purple hover:bg-smartpaw-purple hover:text-white">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button className="bg-smartpaw-purple text-white hover:bg-smartpaw-dark-purple">
+                    Register
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}

@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
+  const { signUp } = useAuth();
   const [userType, setUserType] = useState("pet-owner");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,7 +44,7 @@ const Register = () => {
     return true;
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     
@@ -53,18 +54,17 @@ const Register = () => {
     
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await signUp(email, password, {
+        full_name: fullName,
+        user_type: userType as 'pet-owner' | 'service-provider',
+        ...(userType === 'service-provider' ? { business_name: fullName } : {})
+      });
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
       setIsLoading(false);
-      
-      // In a real app, this would send data to the backend
-      // For this prototype, we'll redirect to a success page
-      if (userType === "pet-owner") {
-        window.location.href = "/monitoring";
-      } else {
-        window.location.href = "/seller-dashboard";
-      }
-    }, 1500);
+    }
   };
 
   return (

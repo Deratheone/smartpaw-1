@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,7 +15,9 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const { signIn } = useAuth();
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -26,18 +28,13 @@ const Login = () => {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await signIn(email, password);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
       setIsLoading(false);
-      
-      // In a real app, this would verify credentials against the backend
-      if (email === "demo@smartpaw.com" && password === "password") {
-        // Redirect to dashboard or home page
-        window.location.href = "/monitoring";
-      } else {
-        setError("Invalid email or password");
-      }
-    }, 1500);
+    }
   };
 
   return (
