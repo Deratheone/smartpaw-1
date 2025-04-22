@@ -30,8 +30,8 @@ const Home = () => {
               <div className="relative">
                 <div className="rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="https://images.unsplash.com/photo-1593871075120-982e042088d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                    alt="Pet Boarding"
+                    src="https://images.unsplash.com/photo-1535268647677-300dbf3d78d1"
+                    alt="Cute Pet"
                     className="w-full h-auto rounded-lg"
                   />
                 </div>
