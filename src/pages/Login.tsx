@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -12,10 +13,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { signIn } = useAuth();
+  const { signIn, loading } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,14 +26,10 @@ const Login = () => {
       return;
     }
 
-    setIsLoading(true);
-
     try {
       await signIn(email, password);
     } catch (error: any) {
       setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -117,9 +113,9 @@ const Login = () => {
                   <Button
                     type="submit"
                     className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
-                    disabled={isLoading}
+                    disabled={loading}
                   >
-                    {isLoading ? "Signing in..." : "Sign In"}
+                    {loading ? "Signing in..." : "Sign In"}
                   </Button>
 
                   <div className="text-center text-sm">

@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff } from "lucide-react";
 
 const Register = () => {
-  const { signUp } = useAuth();
+  const { signUp, loading } = useAuth();
   const [userType, setUserType] = useState("pet-owner");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,7 +17,6 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const validateForm = () => {
@@ -52,8 +51,6 @@ const Register = () => {
       return;
     }
     
-    setIsLoading(true);
-    
     try {
       await signUp(email, password, {
         full_name: fullName,
@@ -62,8 +59,6 @@ const Register = () => {
       });
     } catch (error: any) {
       setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -201,9 +196,9 @@ const Register = () => {
                   <Button
                     type="submit"
                     className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
-                    disabled={isLoading}
+                    disabled={loading}
                   >
-                    {isLoading ? "Creating account..." : "Create Account"}
+                    {loading ? "Creating account..." : "Create Account"}
                   </Button>
 
                   <div className="text-center text-sm">
