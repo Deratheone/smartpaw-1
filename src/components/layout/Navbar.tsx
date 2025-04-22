@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -39,7 +38,6 @@ const Navbar = () => {
             <span className="text-2xl font-bold text-smartpaw-purple">SmartPaw</span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-6 items-center">
             <Link to="/" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
               Home
@@ -49,7 +47,9 @@ const Navbar = () => {
             </Link>
             <ComingSoonLink>Shop</ComingSoonLink>
             <ComingSoonLink>Pet Monitoring</ComingSoonLink>
-            <ComingSoonLink>About Us</ComingSoonLink>
+            <Link to="/about" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+              About Us
+            </Link>
             {user ? (
               <>
                 <button
@@ -75,7 +75,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button 
               variant="ghost" 
@@ -88,7 +87,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden mt-4 pb-4 flex flex-col space-y-4">
             <Link to="/" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
@@ -99,7 +97,9 @@ const Navbar = () => {
             </Link>
             <span className="text-gray-400">Shop (Coming Soon)</span>
             <span className="text-gray-400">Pet Monitoring (Coming Soon)</span>
-            <span className="text-gray-400">About Us (Coming Soon)</span>
+            <Link to="/about" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+              About Us
+            </Link>
             <div className="flex space-x-4 pt-2">
               <Link to="/login" className="flex-1">
                 <Button variant="outline" className="w-full border-smartpaw-purple text-smartpaw-purple hover:bg-smartpaw-purple hover:text-white">
