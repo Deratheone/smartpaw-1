@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -7,58 +8,73 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { 
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const registerSchema = z.object({
+  fullName: z.string().min(2, {
+    message: "Full name must be at least 2 characters.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long.",
+  }),
+  confirmPassword: z.string(),
+  acceptTerms: z.boolean().refine(val => val === true, {
+    message: "You must accept the terms and conditions.",
+  }),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords do not match.",
+  path: ["confirmPassword"],
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Register = () => {
   const { signUp, loading } = useAuth();
-  const [userType, setUserType] = useState("pet-owner");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userType, setUserType] = useState<"pet-owner" | "service-provider">("pet-owner");
   const [showPassword, setShowPassword] = useState(false);
-  const [acceptTerms, setAcceptTerms] = useState(false);
-  const [error, setError] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const validateForm = () => {
-    if (!fullName || !email || !password || !confirmPassword) {
-      setError("Please fill in all fields");
-      return false;
-    }
-    
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return false;
-    }
-    
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long");
-      return false;
-    }
-    
-    if (!acceptTerms) {
-      setError("You must accept the terms and conditions");
-      return false;
-    }
-    
-    return true;
-  };
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      acceptTerms: false,
+    },
+  });
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    
-    if (!validateForm()) {
-      return;
-    }
-    
+  const handleRegister = async (values: RegisterFormValues) => {
     try {
-      await signUp(email, password, {
-        full_name: fullName,
-        user_type: userType as 'pet-owner' | 'service-provider',
-        ...(userType === 'service-provider' ? { business_name: fullName } : {})
+      await signUp(values.email, values.password, {
+        full_name: values.fullName,
+        user_type: userType,
+        ...(userType === 'service-provider' ? { business_name: values.fullName } : {})
       });
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      console.error("Registration error:", error);
     }
   };
 
@@ -66,16 +82,16 @@ const Register = () => {
     <Layout>
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-md mx-auto bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="p-6 sm:p-8">
-              <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Create an Account</h1>
-                <p className="text-gray-600 mt-2">
-                  Join SmartPaw and discover all your pet needs in one place
-                </p>
-              </div>
-
-              <Tabs value={userType} onValueChange={setUserType} className="mb-6">
+          <Card className="max-w-md mx-auto shadow-sm overflow-hidden">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-2xl font-bold text-gray-900">Create an Account</CardTitle>
+              <CardDescription>
+                Join SmartPaw and discover all your pet needs in one place
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent className="p-6">
+              <Tabs value={userType} onValueChange={(value) => setUserType(value as "pet-owner" | "service-provider")} className="mb-6">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="pet-owner">Pet Owner</TabsTrigger>
                   <TabsTrigger value="service-provider">Service Provider</TabsTrigger>
@@ -92,106 +108,121 @@ const Register = () => {
                 </TabsContent>
               </Tabs>
 
-              {error && (
-                <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
-                  <p>{error}</p>
-                </div>
-              )}
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleRegister)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <form onSubmit={handleRegister}>
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-                      Full Name
-                    </label>
-                    <Input
-                      id="fullName"
-                      type="text"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      placeholder="John Doe"
-                      required
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="your@email.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                      Email Address
-                    </label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                      required
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input 
+                              type={showPassword ? "text" : "password"} 
+                              placeholder="••••••••" 
+                              {...field} 
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <p className="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                  <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                    <p className="text-xs text-gray-500">Password must be at least 8 characters long</p>
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input 
+                              type={showConfirmPassword ? "text" : "password"} 
+                              placeholder="••••••••" 
+                              {...field} 
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                  <div className="space-y-2">
-                    <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
-                      Confirm Password
-                    </label>
-                    <Input
-                      id="confirmPassword"
-                      type={showPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                    />
-                  </div>
-
-                  <div className="flex items-start space-x-2">
-                    <Checkbox
-                      id="terms"
-                      checked={acceptTerms}
-                      onCheckedChange={(checked) => setAcceptTerms(!!checked)}
-                    />
-                    <div className="grid gap-1.5 leading-none">
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700"
-                      >
-                        I accept the terms and conditions
-                      </label>
-                      <p className="text-xs text-gray-500">
-                        By creating an account, you agree to our{" "}
-                        <Link to="/terms" className="text-smartpaw-purple hover:underline">
-                          Terms of Service
-                        </Link>{" "}
-                        and{" "}
-                        <Link to="/privacy" className="text-smartpaw-purple hover:underline">
-                          Privacy Policy
-                        </Link>
-                        .
-                      </p>
-                    </div>
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="acceptTerms"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            I accept the terms and conditions
+                          </FormLabel>
+                          <p className="text-xs text-gray-500">
+                            By creating an account, you agree to our{" "}
+                            <Link to="/terms" className="text-smartpaw-purple hover:underline">
+                              Terms of Service
+                            </Link>{" "}
+                            and{" "}
+                            <Link to="/privacy" className="text-smartpaw-purple hover:underline">
+                              Privacy Policy
+                            </Link>.
+                          </p>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <Button
                     type="submit"
@@ -209,10 +240,10 @@ const Register = () => {
                       </Link>
                     </p>
                   </div>
-                </div>
-              </form>
+                </form>
+              </Form>
 
-              <div className="mt-8">
+              <div className="mt-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-200"></div>
@@ -222,7 +253,7 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-4">
+                <div className="mt-4 grid grid-cols-2 gap-4">
                   <Button variant="outline" className="w-full">
                     <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                       <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
@@ -261,8 +292,8 @@ const Register = () => {
                   </Button>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </Layout>

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 interface ServiceProviderFormData {
   business_name: string;
@@ -33,6 +41,45 @@ const ServiceProviderProfile = () => {
     phone: "",
     website: "",
   });
+
+  useEffect(() => {
+    const fetchProviderData = async () => {
+      if (!user) return;
+      
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("service_providers")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching provider data:", error);
+          return;
+        }
+
+        if (data) {
+          setFormData({
+            business_name: data.business_name || "",
+            description: data.description || "",
+            address: data.address || "",
+            city: data.city || "",
+            state: data.state || "",
+            zip_code: data.zip_code || "",
+            phone: data.phone || "",
+            website: data.website || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProviderData();
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -70,114 +117,114 @@ const ServiceProviderProfile = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Complete Your Business Profile</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="business_name" className="block text-sm font-medium mb-2">
-            Business Name
-          </label>
-          <Input
-            id="business_name"
-            name="business_name"
-            value={formData.business_name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+    <div className="container max-w-4xl mx-auto p-6 md:p-10">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Complete Your Business Profile</CardTitle>
+          <CardDescription>
+            Tell pet owners about your business and the services you provide.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="business_name">Business Name</Label>
+              <Input
+                id="business_name"
+                name="business_name"
+                value={formData.business_name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
 
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium mb-2">
-            Business Description
-          </label>
-          <Textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Business Description</Label>
+              <Textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Describe your services and expertise..."
+                className="min-h-[120px]"
+                required
+              />
+            </div>
 
-        <div>
-          <label htmlFor="address" className="block text-sm font-medium mb-2">
-            Address
-          </label>
-          <Input
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                placeholder="Street address"
+              />
+            </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="city" className="block text-sm font-medium mb-2">
-              City
-            </label>
-            <Input
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="state" className="block text-sm font-medium mb-2">
-              State
-            </label>
-            <Input
-              id="state"
-              name="state"
-              value={formData.state}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="city">City</Label>
+                <Input
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  placeholder="City"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="state">State</Label>
+                <Input
+                  id="state"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                  placeholder="State"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="zip_code">ZIP Code</Label>
+                <Input
+                  id="zip_code"
+                  name="zip_code"
+                  value={formData.zip_code}
+                  onChange={handleInputChange}
+                  placeholder="ZIP code"
+                />
+              </div>
+            </div>
 
-        <div>
-          <label htmlFor="zip_code" className="block text-sm font-medium mb-2">
-            ZIP Code
-          </label>
-          <Input
-            id="zip_code"
-            name="zip_code"
-            value={formData.zip_code}
-            onChange={handleInputChange}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="Phone number"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium mb-2">
-            Phone Number
-          </label>
-          <Input
-            id="phone"
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleInputChange}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="website">Website</Label>
+              <Input
+                id="website"
+                name="website"
+                type="url"
+                value={formData.website}
+                onChange={handleInputChange}
+                placeholder="https://yourwebsite.com"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="website" className="block text-sm font-medium mb-2">
-            Website
-          </label>
-          <Input
-            id="website"
-            name="website"
-            type="url"
-            value={formData.website}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Saving..." : "Save Profile"}
-        </Button>
-      </form>
+            <Button type="submit" className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white" disabled={loading}>
+              {loading ? "Saving..." : "Save Profile"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

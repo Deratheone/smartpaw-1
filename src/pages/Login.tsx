@@ -7,129 +7,116 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState("");
 
   const { signIn, loading } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
     if (!email || !password) {
-      setError("Please fill in all fields");
       return;
     }
 
-    try {
-      await signIn(email, password);
-    } catch (error: any) {
-      setError(error.message);
-    }
+    await signIn(email, password);
   };
 
   return (
     <Layout>
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-md mx-auto bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="p-6 sm:p-8">
-              <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-                <p className="text-gray-600 mt-2">
-                  Sign in to your SmartPaw account
-                </p>
-              </div>
-
-              {error && (
-                <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
-                  <p>{error}</p>
+          <Card className="max-w-md mx-auto shadow-sm overflow-hidden">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-2xl font-bold text-gray-900">Welcome Back</CardTitle>
+              <CardDescription>
+                Sign in to your SmartPaw account
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-6">
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                  />
                 </div>
-              )}
 
-              <form onSubmit={handleLogin}>
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                      Email Address
-                    </label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Password</Label>
+                    <Link to="/forgot-password" className="text-sm text-smartpaw-purple hover:underline">
+                      Forgot Password?
+                    </Link>
+                  </div>
+                  <div className="relative">
                     <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
                       required
                     />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                        Password
-                      </label>
-                      <Link to="/forgot-password" className="text-sm text-smartpaw-purple hover:underline">
-                        Forgot Password?
-                      </Link>
-                    </div>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="remember"
-                      checked={rememberMe}
-                      onCheckedChange={(checked) => setRememberMe(!!checked)}
-                    />
-                    <label
-                      htmlFor="remember"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700"
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowPassword(!showPassword)}
                     >
-                      Remember me
-                    </label>
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
                   </div>
+                </div>
 
-                  <Button
-                    type="submit"
-                    className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
-                    disabled={loading}
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(!!checked)}
+                  />
+                  <label
+                    htmlFor="remember"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700"
                   >
-                    {loading ? "Signing in..." : "Sign In"}
-                  </Button>
+                    Remember me
+                  </label>
+                </div>
 
-                  <div className="text-center text-sm">
-                    <p className="text-gray-600">
-                      Don't have an account?{" "}
-                      <Link to="/register" className="text-smartpaw-purple hover:underline font-medium">
-                        Sign up
-                      </Link>
-                    </p>
-                  </div>
+                <Button
+                  type="submit"
+                  className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
+                  disabled={loading}
+                >
+                  {loading ? "Signing in..." : "Sign In"}
+                </Button>
+
+                <div className="text-center text-sm">
+                  <p className="text-gray-600">
+                    Don't have an account?{" "}
+                    <Link to="/register" className="text-smartpaw-purple hover:underline font-medium">
+                      Sign up
+                    </Link>
+                  </p>
                 </div>
               </form>
 
-              <div className="mt-8">
+              <div className="mt-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-200"></div>
@@ -139,7 +126,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-4">
+                <div className="mt-4 grid grid-cols-2 gap-4">
                   <Button variant="outline" className="w-full">
                     <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                       <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
@@ -178,8 +165,8 @@ const Login = () => {
                   </Button>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </Layout>

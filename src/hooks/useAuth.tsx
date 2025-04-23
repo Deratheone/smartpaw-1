@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         options: {
           data: userData,
-          emailRedirectTo: window.location.origin + '/login'
+          emailRedirectTo: `${window.location.origin}/login`
         }
       });
 
@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Sign up result:', data);
       
       // Check if email confirmation is required
-      if (data?.user?.identities?.length === 0) {
+      if (!data.user || data.user.identities?.length === 0) {
         toast({
           title: "This email is already registered",
           description: "Please use a different email or try logging in.",
@@ -85,16 +85,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       toast({
-        title: "Success!",
-        description: "Please check your email to verify your account. If you don't see email verification in your Supabase settings, you can log in immediately.",
+        title: "Account created successfully!",
+        description: "You can now login with your credentials.",
       });
 
-      // Redirect service providers to complete their profile
-      if (userData.user_type === 'service-provider') {
-        navigate('/service-provider/profile');
-      } else {
-        navigate('/login');
-      }
+      navigate('/login');
     } catch (error: any) {
       console.error('Sign up error:', error);
       toast({
@@ -120,18 +115,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
 
       console.log('Sign in successful:', data);
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in."
-      });
       
-      navigate('/');
+      if (data.user) {
+        // Check user type and redirect accordingly
+        const userType = data.user.user_metadata.user_type;
+        
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in."
+        });
+        
+        if (userType === 'service-provider') {
+          // Check if profile is complete
+          const { data: providerData } = await supabase
+            .from('service_providers')
+            .select('description')
+            .eq('id', data.user.id)
+            .single();
+            
+          if (!providerData || !providerData.description) {
+            navigate('/service-provider/profile');
+          } else {
+            navigate('/seller-dashboard');
+          }
+        } else {
+          navigate('/');
+        }
+      }
     } catch (error: any) {
       console.error('Sign in error:', error);
       
       let errorMessage = error.message;
       
-      // Provide more user-friendly error messages
       if (error.message.includes('Email not confirmed')) {
         errorMessage = "Please verify your email address before logging in. Check your inbox for a confirmation link.";
       } else if (error.message.includes('Invalid login credentials')) {
