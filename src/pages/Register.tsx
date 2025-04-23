@@ -117,7 +117,7 @@ const Register = () => {
                       <FormItem>
                         <FormLabel>Full Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="John Doe" {...field} />
+                          <Input placeholder="Enter your full name" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -131,7 +131,7 @@ const Register = () => {
                       <FormItem>
                         <FormLabel>Email Address</FormLabel>
                         <FormControl>
-                          <Input type="email" placeholder="your@email.com" {...field} />
+                          <Input type="email" placeholder="Enter your email" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -148,7 +148,7 @@ const Register = () => {
                           <div className="relative">
                             <Input 
                               type={showPassword ? "text" : "password"} 
-                              placeholder="••••••••" 
+                              placeholder="Create a password" 
                               {...field} 
                             />
                             <button
@@ -176,7 +176,7 @@ const Register = () => {
                           <div className="relative">
                             <Input 
                               type={showConfirmPassword ? "text" : "password"} 
-                              placeholder="••••••••" 
+                              placeholder="Confirm your password" 
                               {...field} 
                             />
                             <button

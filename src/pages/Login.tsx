@@ -53,7 +53,7 @@ const Login = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
+                    placeholder="Enter your email"
                     required
                   />
                 </div>
@@ -71,7 +71,7 @@ const Login = () => {
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
+                      placeholder="Enter your password"
                       required
                     />
                     <button
