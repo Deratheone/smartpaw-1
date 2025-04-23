@@ -61,6 +61,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       console.log('Signing up with:', email, userData);
       
+      // For service providers, ensure business_name is provided
+      if (userData.user_type === 'service-provider' && !userData.business_name) {
+        userData.business_name = userData.full_name; // Use full name as fallback
+      }
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -127,13 +132,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         if (userType === 'service-provider') {
           // Check if profile is complete
-          const { data: providerData } = await supabase
+          const { data: providerData, error: providerError } = await supabase
             .from('service_providers')
             .select('description')
             .eq('id', data.user.id)
             .single();
             
-          if (!providerData || !providerData.description) {
+          if (providerError || !providerData || !providerData.description) {
             navigate('/service-provider/profile');
           } else {
             navigate('/seller-dashboard');

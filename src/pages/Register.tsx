@@ -42,6 +42,7 @@ const registerSchema = z.object({
   acceptTerms: z.boolean().refine(val => val === true, {
     message: "You must accept the terms and conditions.",
   }),
+  businessName: z.string().optional(),
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords do not match.",
   path: ["confirmPassword"],
@@ -63,15 +64,17 @@ const Register = () => {
       password: "",
       confirmPassword: "",
       acceptTerms: false,
+      businessName: "",
     },
   });
 
   const handleRegister = async (values: RegisterFormValues) => {
     try {
+      console.log("Registration values:", values, "userType:", userType);
       await signUp(values.email, values.password, {
         full_name: values.fullName,
         user_type: userType,
-        ...(userType === 'service-provider' ? { business_name: values.fullName } : {})
+        business_name: userType === 'service-provider' ? (values.businessName || values.fullName) : undefined
       });
     } catch (error) {
       console.error("Registration error:", error);
@@ -123,6 +126,22 @@ const Register = () => {
                       </FormItem>
                     )}
                   />
+
+                  {userType === 'service-provider' && (
+                    <FormField
+                      control={form.control}
+                      name="businessName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Business Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter your business name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   <FormField
                     control={form.control}
