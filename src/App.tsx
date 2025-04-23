@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SellerDashboard from "./pages/SellerDashboard";
 import NotFound from "./pages/NotFound";
+import ServiceProviderProfile from "@/components/ServiceProviderProfile";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +36,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/seller-dashboard" element={<SellerDashboard />} />
+            <Route path="/service-provider/profile" element={<ServiceProviderProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

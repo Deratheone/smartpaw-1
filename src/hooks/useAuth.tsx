@@ -89,7 +89,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: "Please check your email to verify your account. If you don't see email verification in your Supabase settings, you can log in immediately.",
       });
 
-      navigate('/login');
+      // Redirect service providers to complete their profile
+      if (userData.user_type === 'service-provider') {
+        navigate('/service-provider/profile');
+      } else {
+        navigate('/login');
+      }
     } catch (error: any) {
       console.error('Sign up error:', error);
       toast({
