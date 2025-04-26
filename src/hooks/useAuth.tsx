@@ -1,3 +1,4 @@
+
 import { useEffect, useState, createContext, useContext } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -64,7 +65,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userData.business_name = userData.full_name;
       }
       
-      const redirectUrl = `${window.location.origin}/login`;
+      // Get the current origin (with protocol) for the redirect URL
+      const origin = window.location.origin;
+      // Create a proper redirect URL that points to the login page
+      const redirectUrl = `${origin}/login`;
       console.log('Using redirect URL:', redirectUrl);
       
       const { data, error } = await supabase.auth.signUp({
@@ -184,10 +188,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     try {
       setLoading(true);
+      
+      // Get the current origin for proper redirect
+      const origin = window.location.origin;
+      const redirectUrl = `${origin}/login`;
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/login`
+          redirectTo: redirectUrl
         }
       });
 
@@ -229,6 +238,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       
+      // Delete service provider data if applicable
       if (user.user_metadata.user_type === 'service-provider') {
         const { error: providerError } = await supabase
           .from('service_providers')
@@ -238,6 +248,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (providerError) throw providerError;
       }
       
+      // Delete the user account
       const { error } = await supabase.auth.admin.deleteUser(user.id);
       if (error) throw error;
       
