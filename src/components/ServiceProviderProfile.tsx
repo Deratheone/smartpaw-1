@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface ServiceProviderFormData {
   business_name: string;
@@ -28,7 +28,7 @@ interface ServiceProviderFormData {
 }
 
 const ServiceProviderProfile = () => {
-  const { user } = useAuth();
+  const { user, deleteAccount } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ServiceProviderFormData>({
@@ -219,9 +219,34 @@ const ServiceProviderProfile = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white" disabled={loading}>
-              {loading ? "Saving..." : "Save Profile"}
-            </Button>
+            <div className="space-y-4">
+              <Button type="submit" className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white" disabled={loading}>
+                {loading ? "Saving..." : "Save Profile"}
+              </Button>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button type="button" variant="destructive" className="w-full">
+                    Delete Account
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete your account
+                      and remove all your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={deleteAccount} className="bg-red-500 hover:bg-red-600">
+                      Delete Account
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </form>
         </CardContent>
       </Card>

@@ -1,4 +1,3 @@
-
 import { useEffect, useState, createContext, useContext } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,7 +13,9 @@ interface AuthContextType {
     business_name?: string;
   }) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   loading: boolean;
 }
 
@@ -27,7 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         console.log('Auth state changed:', event, session);
@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
-    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Got existing session:', session);
       setSession(session);
@@ -61,12 +60,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       console.log('Signing up with:', email, userData);
       
-      // For service providers, ensure business_name is provided
       if (userData.user_type === 'service-provider' && !userData.business_name) {
-        userData.business_name = userData.full_name; // Use full name as fallback
+        userData.business_name = userData.full_name;
       }
       
-      // Use the actual URL with the correct path instead of just origin
       const redirectUrl = `${window.location.origin}/login`;
       console.log('Using redirect URL:', redirectUrl);
       
@@ -83,7 +80,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       console.log('Sign up result:', data);
       
-      // Check if email confirmation is required
       if (!data.user || data.user.identities?.length === 0) {
         toast({
           title: "This email is already registered",
@@ -93,9 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // Check if email confirmation is needed
       if (data.session) {
-        // User was automatically signed in (email confirmation disabled)
         setSession(data.session);
         setUser(data.user);
         
@@ -104,14 +98,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           description: "Welcome to SmartPaw.",
         });
 
-        // Redirect based on user type
         if (userData.user_type === 'service-provider') {
           navigate('/service-provider/profile');
         } else {
           navigate('/');
         }
       } else {
-        // Email confirmation is required
         toast({
           title: "Account created successfully!",
           description: "Please check your email for a confirmation link before logging in.",
@@ -145,7 +137,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Sign in successful:', data);
       
       if (data.user) {
-        // Check user type and redirect accordingly
         const userType = data.user.user_metadata.user_type;
         
         toast({
@@ -154,7 +145,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
         
         if (userType === 'service-provider') {
-          // Check if profile is complete
           const { data: providerData, error: providerError } = await supabase
             .from('service_providers')
             .select('description')
@@ -191,6 +181,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+
+      if (error) throw error;
+    } catch (error: any) {
+      console.error('Google sign in error:', error);
+      toast({
+        title: "Error signing in with Google",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     try {
       setLoading(true);
@@ -210,8 +223,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const deleteAccount = async () => {
+    if (!user) return;
+    
+    try {
+      setLoading(true);
+      
+      if (user.user_metadata.user_type === 'service-provider') {
+        const { error: providerError } = await supabase
+          .from('service_providers')
+          .delete()
+          .eq('id', user.id);
+          
+        if (providerError) throw providerError;
+      }
+      
+      const { error } = await supabase.auth.admin.deleteUser(user.id);
+      if (error) throw error;
+      
+      toast({
+        title: "Account deleted",
+        description: "Your account has been permanently deleted.",
+      });
+      
+      await signOut();
+    } catch (error: any) {
+      console.error('Delete account error:', error);
+      toast({
+        title: "Error deleting account",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ session, user, signUp, signIn, signOut, loading }}>
+    <AuthContext.Provider value={{ 
+      session, 
+      user, 
+      signUp, 
+      signIn, 
+      signInWithGoogle,
+      signOut, 
+      deleteAccount,
+      loading 
+    }}>
       {children}
     </AuthContext.Provider>
   );
