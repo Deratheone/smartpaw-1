@@ -66,12 +66,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userData.business_name = userData.full_name; // Use full name as fallback
       }
       
+      // Use the actual URL with the correct path instead of just origin
+      const redirectUrl = `${window.location.origin}/login`;
+      console.log('Using redirect URL:', redirectUrl);
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: userData,
-          emailRedirectTo: `${window.location.origin}/login`
+          emailRedirectTo: redirectUrl
         }
       });
 
@@ -89,12 +93,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      toast({
-        title: "Account created successfully!",
-        description: "You can now login with your credentials.",
-      });
+      // Check if email confirmation is needed
+      if (data.session) {
+        // User was automatically signed in (email confirmation disabled)
+        setSession(data.session);
+        setUser(data.user);
+        
+        toast({
+          title: "Account created and logged in!",
+          description: "Welcome to SmartPaw.",
+        });
 
-      navigate('/login');
+        // Redirect based on user type
+        if (userData.user_type === 'service-provider') {
+          navigate('/service-provider/profile');
+        } else {
+          navigate('/');
+        }
+      } else {
+        // Email confirmation is required
+        toast({
+          title: "Account created successfully!",
+          description: "Please check your email for a confirmation link before logging in.",
+        });
+        navigate('/login');
+      }
     } catch (error: any) {
       console.error('Sign up error:', error);
       toast({
