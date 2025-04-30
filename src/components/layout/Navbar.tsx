@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -13,9 +13,19 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const location = useLocation();
 
   // Check if user is a service provider
   const isServiceProvider = user?.user_metadata?.user_type === 'service-provider';
+
+  // Debug user info
+  useEffect(() => {
+    if (user) {
+      console.log("User logged in:", user);
+      console.log("User metadata:", user.user_metadata);
+      console.log("Is service provider:", isServiceProvider);
+    }
+  }, [user, isServiceProvider]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -57,7 +67,14 @@ const Navbar = () => {
             {user ? (
               <>
                 {isServiceProvider && (
-                  <Link to="/seller-dashboard" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+                  <Link 
+                    to="/seller-dashboard" 
+                    className={`${
+                      location.pathname === "/seller-dashboard" 
+                        ? "text-smartpaw-purple font-medium" 
+                        : "text-gray-700 hover:text-smartpaw-purple"
+                    } transition-colors`}
+                  >
                     Seller Dashboard
                   </Link>
                 )}
@@ -112,7 +129,14 @@ const Navbar = () => {
             {user ? (
               <>
                 {isServiceProvider && (
-                  <Link to="/seller-dashboard" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+                  <Link 
+                    to="/seller-dashboard" 
+                    className={`${
+                      location.pathname === "/seller-dashboard" 
+                        ? "text-smartpaw-purple font-medium" 
+                        : "text-gray-700 hover:text-smartpaw-purple"
+                    } transition-colors`}
+                  >
                     Seller Dashboard
                   </Link>
                 )}
