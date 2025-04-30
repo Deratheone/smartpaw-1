@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,6 +13,9 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAuth();
+
+  // Check if user is a service provider
+  const isServiceProvider = user?.user_metadata?.user_type === 'service-provider';
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -52,6 +56,11 @@ const Navbar = () => {
             </Link>
             {user ? (
               <>
+                {isServiceProvider && (
+                  <Link to="/seller-dashboard" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+                    Seller Dashboard
+                  </Link>
+                )}
                 <button
                   onClick={() => signOut()}
                   className="text-gray-700 hover:text-smartpaw-purple transition-colors"
@@ -100,18 +109,34 @@ const Navbar = () => {
             <Link to="/about" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
               About Us
             </Link>
-            <div className="flex space-x-4 pt-2">
-              <Link to="/login" className="flex-1">
-                <Button variant="outline" className="w-full border-smartpaw-purple text-smartpaw-purple hover:bg-smartpaw-purple hover:text-white">
-                  Login
-                </Button>
-              </Link>
-              <Link to="/register" className="flex-1">
-                <Button className="w-full bg-smartpaw-purple text-white hover:bg-smartpaw-dark-purple">
-                  Register
-                </Button>
-              </Link>
-            </div>
+            {user ? (
+              <>
+                {isServiceProvider && (
+                  <Link to="/seller-dashboard" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+                    Seller Dashboard
+                  </Link>
+                )}
+                <button
+                  onClick={() => signOut()}
+                  className="text-gray-700 hover:text-smartpaw-purple transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <div className="flex space-x-4 pt-2">
+                <Link to="/login" className="flex-1">
+                  <Button variant="outline" className="w-full border-smartpaw-purple text-smartpaw-purple hover:bg-smartpaw-purple hover:text-white">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/register" className="flex-1">
+                  <Button className="w-full bg-smartpaw-purple text-white hover:bg-smartpaw-dark-purple">
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>
