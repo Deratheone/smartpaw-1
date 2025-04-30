@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { 
   Tooltip,
   TooltipContent,
@@ -78,6 +78,17 @@ const Navbar = () => {
                     Seller Dashboard
                   </Link>
                 )}
+                <Link 
+                  to="/profile" 
+                  className={`${
+                    location.pathname === "/profile" 
+                      ? "text-smartpaw-purple font-medium" 
+                      : "text-gray-700 hover:text-smartpaw-purple"
+                  } transition-colors flex items-center`}
+                >
+                  <User size={18} className="mr-1" />
+                  My Profile
+                </Link>
                 <button
                   onClick={() => signOut()}
                   className="text-gray-700 hover:text-smartpaw-purple transition-colors"
@@ -140,6 +151,17 @@ const Navbar = () => {
                     Seller Dashboard
                   </Link>
                 )}
+                <Link 
+                  to="/profile" 
+                  className={`${
+                    location.pathname === "/profile" 
+                      ? "text-smartpaw-purple font-medium" 
+                      : "text-gray-700 hover:text-smartpaw-purple"
+                  } transition-colors flex items-center`}
+                >
+                  <User size={18} className="mr-1" />
+                  My Profile
+                </Link>
                 <button
                   onClick={() => signOut()}
                   className="text-gray-700 hover:text-smartpaw-purple transition-colors"
