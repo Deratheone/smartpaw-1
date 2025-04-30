@@ -1,5 +1,5 @@
 
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,16 +8,17 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { IndianRupee, MapPin, Image, Upload } from "lucide-react";
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
 
-interface AddServiceFormProps {
+interface EditServiceFormProps {
+  service: {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    available: boolean;
+    image_url?: string;
+    address?: string;
+  };
   onSuccess: () => void;
 }
 
@@ -32,14 +33,49 @@ interface FormValues {
   zipCode?: string;
 }
 
-const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
+const EditServiceForm = ({ service, onSuccess }: EditServiceFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(service.image_url || null);
   
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>();
+  // Parse address if it exists
+  const [addressParts, setAddressParts] = useState({
+    address: "",
+    city: "",
+    state: "",
+    zipCode: ""
+  });
+
+  useEffect(() => {
+    if (service.address) {
+      const parts = service.address.split(',').map(part => part.trim());
+      setAddressParts({
+        address: parts[0] || "",
+        city: parts[1] || "",
+        state: parts[2] || "",
+        zipCode: parts[3] || ""
+      });
+    }
+  }, [service]);
+  
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormValues>({
+    defaultValues: {
+      title: service.title,
+      description: service.description,
+      price: service.price.toString(),
+      imageUrl: service.image_url || ""
+    }
+  });
+
+  // Set the address fields
+  useEffect(() => {
+    setValue("address", addressParts.address);
+    setValue("city", addressParts.city);
+    setValue("state", addressParts.state);
+    setValue("zipCode", addressParts.zipCode);
+  }, [addressParts, setValue]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -100,37 +136,38 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       
       const { error } = await supabase
         .from('pet_boarding_services')
-        .insert({
-          provider_id: user.id,
+        .update({
           title: data.title,
           description: data.description,
           price: parseFloat(data.price),
           image_url: imageUrl,
-          address: address,
-          available: true
-        });
+          address: address
+        })
+        .eq('id', service.id);
 
       if (error) throw error;
       
       toast({
-        title: "Service Created",
-        description: "Your service listing has been created successfully.",
+        title: "Service Updated",
+        description: "Your service listing has been updated successfully.",
       });
       
-      // Reset form and image preview
-      reset();
-      setSelectedImage(null);
-      setImagePreview(null);
       onSuccess();
     } catch (error: any) {
       toast({
-        title: "Error Creating Service",
+        title: "Error Updating Service",
         description: error.message,
         variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    setValue("imageUrl", "");
   };
 
   return (
@@ -230,10 +267,7 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
               />
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedImage(null);
-                  setImagePreview(null);
-                }}
+                onClick={handleRemoveImage}
                 className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
               >
                 ×
@@ -259,12 +293,15 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
             </div>
           )}
           
-          <p className="text-xs text-gray-500">Or provide an image URL:</p>
-          <Input
-            {...register("imageUrl")}
-            placeholder="https://example.com/image.jpg"
-            disabled={!!selectedImage}
-          />
+          {!imagePreview && (
+            <>
+              <p className="text-xs text-gray-500">Or provide an image URL:</p>
+              <Input
+                {...register("imageUrl")}
+                placeholder="https://example.com/image.jpg"
+              />
+            </>
+          )}
         </div>
       </div>
       
@@ -273,10 +310,10 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
         className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple"
         disabled={isLoading}
       >
-        {isLoading ? "Creating..." : "Create Service"}
+        {isLoading ? "Updating..." : "Update Service"}
       </Button>
     </form>
   );
 };
 
-export default AddServiceForm;
+export default EditServiceForm;

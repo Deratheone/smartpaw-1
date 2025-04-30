@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -6,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
-import { Calendar, DollarSign, ShoppingBag, Users, Activity, Plus, Package, Clock } from "lucide-react";
+import { Calendar, IndianRupee, ShoppingBag, Users, Activity, Plus, Package, Clock, MapPin, Image } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/components/ui/use-toast";
 import AddServiceForm from "@/components/seller/AddServiceForm";
+import EditServiceForm from "@/components/seller/EditServiceForm";
 
 interface ServiceListing {
   id: string;
@@ -21,6 +21,7 @@ interface ServiceListing {
   available: boolean;
   created_at: string;
   image_url?: string;
+  address?: string;
 }
 
 interface BookingStats {
@@ -36,6 +37,8 @@ const SellerDashboard = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false);
+  const [isEditServiceOpen, setIsEditServiceOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<ServiceListing | null>(null);
 
   // Redirect if not logged in or not a service provider
   useEffect(() => {
@@ -143,8 +146,19 @@ const SellerDashboard = () => {
     }
   };
 
+  const handleEditService = (service: ServiceListing) => {
+    setSelectedService(service);
+    setIsEditServiceOpen(true);
+  };
+
   const handleAddServiceSuccess = () => {
     setIsAddServiceOpen(false);
+    queryClient.invalidateQueries({ queryKey: ['seller-services', user?.id] });
+  };
+
+  const handleEditServiceSuccess = () => {
+    setIsEditServiceOpen(false);
+    setSelectedService(null);
     queryClient.invalidateQueries({ queryKey: ['seller-services', user?.id] });
   };
 
@@ -172,10 +186,10 @@ const SellerDashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <DollarSign className="h-4 w-4 text-gray-500" />
+              <IndianRupee className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
+              <div className="text-2xl font-bold">₹{stats.totalRevenue.toFixed(2)}</div>
               <p className="text-xs text-gray-500">Lifetime earnings</p>
             </CardContent>
           </Card>
@@ -244,24 +258,49 @@ const SellerDashboard = () => {
                   ) : (
                     <div className="grid grid-cols-1 gap-4">
                       {services?.map((service) => (
-                        <div key={service.id} className="flex items-center p-4 border rounded-lg">
-                          <div className="mr-4">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                              service.available 
-                                ? "bg-green-100 text-green-600" 
-                                : "bg-gray-100 text-gray-600"
-                            }`}>
-                              <Package className="h-5 w-5" />
-                            </div>
+                        <div key={service.id} className="flex items-start p-4 border rounded-lg">
+                          <div className="mr-4 flex-shrink-0">
+                            {service.image_url ? (
+                              <img 
+                                src={service.image_url} 
+                                alt={service.title}
+                                className="w-16 h-16 object-cover rounded-md"
+                              />
+                            ) : (
+                              <div className={`w-16 h-16 rounded-md flex items-center justify-center ${
+                                service.available 
+                                  ? "bg-green-100 text-green-600" 
+                                  : "bg-gray-100 text-gray-600"
+                              }`}>
+                                <Package className="h-8 w-8" />
+                              </div>
+                            )}
                           </div>
+                          
                           <div className="flex-1">
-                            <div className="flex justify-between items-start">
+                            <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
                               <div>
                                 <p className="font-medium">{service.title}</p>
-                                <p className="text-sm text-gray-500">${service.price.toFixed(2)}</p>
+                                <p className="text-sm text-gray-500 flex items-center">
+                                  <IndianRupee className="h-3 w-3 mr-1" />
+                                  {service.price.toFixed(2)}
+                                </p>
+                                {service.address && (
+                                  <p className="text-xs text-gray-500 flex items-center mt-1">
+                                    <MapPin className="h-3 w-3 mr-1" />
+                                    {service.address}
+                                  </p>
+                                )}
                               </div>
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="outline">Edit</Button>
+                              
+                              <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleEditService(service)}
+                                >
+                                  Edit
+                                </Button>
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
@@ -338,11 +377,26 @@ const SellerDashboard = () => {
 
         {/* Dialog for adding a new service */}
         <Dialog open={isAddServiceOpen} onOpenChange={setIsAddServiceOpen}>
-          <DialogContent>
+          <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>Add New Service</DialogTitle>
             </DialogHeader>
             <AddServiceForm onSuccess={handleAddServiceSuccess} />
+          </DialogContent>
+        </Dialog>
+        
+        {/* Dialog for editing a service */}
+        <Dialog open={isEditServiceOpen} onOpenChange={setIsEditServiceOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Service</DialogTitle>
+            </DialogHeader>
+            {selectedService && (
+              <EditServiceForm 
+                service={selectedService} 
+                onSuccess={handleEditServiceSuccess} 
+              />
+            )}
           </DialogContent>
         </Dialog>
       </div>
