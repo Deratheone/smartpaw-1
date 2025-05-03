@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       pet_boarding_services: {
         Row: {
+          address: string | null
           available: boolean
           created_at: string
           description: string
@@ -22,6 +23,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          address?: string | null
           available?: boolean
           created_at?: string
           description: string
@@ -33,6 +35,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          address?: string | null
           available?: boolean
           created_at?: string
           description?: string

@@ -16,7 +16,6 @@ import Register from "./pages/Register";
 import SellerDashboard from "./pages/SellerDashboard";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
-import ServiceProviderProfile from "@/components/ServiceProviderProfile";
 
 const queryClient = new QueryClient();
 
@@ -38,7 +37,6 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/seller-dashboard" element={<SellerDashboard />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/service-provider/profile" element={<ServiceProviderProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
