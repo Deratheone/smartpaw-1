@@ -49,6 +49,11 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-2">
+            <img 
+              src="/lovable-uploads/3e227a9f-4cb9-4f0d-abac-700e7fa34a0b.png" 
+              alt="SmartPaw Logo" 
+              className="h-10 w-auto"
+            />
             <span className="text-2xl font-bold text-smartpaw-purple">SmartPaw</span>
           </Link>
 
