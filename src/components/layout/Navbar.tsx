@@ -62,7 +62,7 @@ const Navbar = () => {
               Home
             </Link>
             <Link to="/services" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Pet Boarding
+              Services
             </Link>
             <ComingSoonLink>Shop</ComingSoonLink>
             <ComingSoonLink>Pet Monitoring</ComingSoonLink>
@@ -135,7 +135,7 @@ const Navbar = () => {
               Home
             </Link>
             <Link to="/services" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
-              Pet Boarding
+              Services
             </Link>
             <span className="text-gray-400">Shop (Coming Soon)</span>
             <span className="text-gray-400">Pet Monitoring (Coming Soon)</span>

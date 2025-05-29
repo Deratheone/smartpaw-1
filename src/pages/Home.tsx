@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
-import { ArrowRight, Bed, MapPin, Calendar } from "lucide-react";
+import { ArrowRight, Bed, MapPin, Calendar, Scissors } from "lucide-react";
 
 const Home = () => {
   return (
@@ -13,15 +13,15 @@ const Home = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
-                Safe and Caring <span className="text-smartpaw-purple">Pet Boarding</span>
+                Professional <span className="text-smartpaw-purple">Pet Care Services</span>
               </h1>
               <p className="text-lg text-gray-700 mb-8 max-w-lg">
-                Trust your furry friend with our verified pet boarding services while you're away. Professional care, daily updates, and peace of mind.
+                Trust your furry friend with our verified pet care professionals. From boarding to grooming, we provide comprehensive care with daily updates and peace of mind.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/services">
                   <Button className="bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white px-8 py-6 h-auto text-lg">
-                    Find Pet Boarding <ArrowRight className="ml-2 h-5 w-5" />
+                    Find Pet Services <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
               </div>
@@ -36,10 +36,10 @@ const Home = () => {
                   />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-smartpaw-yellow p-4 rounded-lg shadow-lg hidden md:block">
-                  <p className="font-semibold text-gray-800">Trusted Pet Boarding</p>
+                  <p className="font-semibold text-gray-800">Trusted Pet Care</p>
                 </div>
                 <div className="absolute -top-6 -right-6 bg-smartpaw-pink p-4 rounded-lg shadow-lg hidden md:block">
-                  <p className="font-semibold text-gray-800">24/7 Pet Care</p>
+                  <p className="font-semibold text-gray-800">24/7 Support</p>
                 </div>
               </div>
             </div>
@@ -52,10 +52,10 @@ const Home = () => {
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-              Professional Pet Boarding Services
+              Professional Pet Care Services
             </h2>
             <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-              We ensure your pets receive the best care with our comprehensive boarding services
+              We ensure your pets receive the best care with our comprehensive services
             </p>
           </div>
 
@@ -64,7 +64,7 @@ const Home = () => {
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <Bed className="w-8 h-8 text-smartpaw-purple" />
               </div>
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Comfortable Stay</h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
               <p className="text-gray-700 mb-4">
                 Spacious, clean, and cozy boarding facilities for your pet's comfort
               </p>
@@ -72,11 +72,11 @@ const Home = () => {
 
             <div className="bg-smartpaw-peach bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
-                <Calendar className="w-8 h-8 text-smartpaw-purple" />
+                <Scissors className="w-8 h-8 text-smartpaw-purple" />
               </div>
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Daily Activities</h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Grooming</h3>
               <p className="text-gray-700 mb-4">
-                Structured routines including walks, playtime, and rest periods
+                Professional grooming services to keep your pet looking and feeling great
               </p>
             </div>
 
@@ -86,7 +86,7 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Nearby Locations</h3>
               <p className="text-gray-700 mb-4">
-                Find trusted boarding facilities in your neighborhood
+                Find trusted service providers in your neighborhood
               </p>
             </div>
           </div>
@@ -112,13 +112,13 @@ const Home = () => {
             </div>
 
             <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-              <h3 className="text-xl font-bold mb-2 text-gray-900">Pet Grooming</h3>
-              <p className="text-gray-600">Professional grooming services at your doorstep</p>
+              <h3 className="text-xl font-bold mb-2 text-gray-900">Vet Services</h3>
+              <p className="text-gray-600">Connect with verified veterinarians</p>
             </div>
 
             <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-              <h3 className="text-xl font-bold mb-2 text-gray-900">Vet Services</h3>
-              <p className="text-gray-600">Connect with verified veterinarians</p>
+              <h3 className="text-xl font-bold mb-2 text-gray-900">Pet Monitoring</h3>
+              <p className="text-gray-600">Keep track of your pet's health and activities</p>
             </div>
           </div>
         </div>
@@ -128,14 +128,14 @@ const Home = () => {
       <section className="py-20 bg-smartpaw-purple">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-            Ready to Book Pet Boarding?
+            Ready to Find Pet Care Services?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Find the perfect boarding facility for your furry friend today.
+            Discover trusted boarding and grooming services for your furry friend today.
           </p>
           <Link to="/services">
             <Button className="bg-white text-smartpaw-purple hover:bg-gray-100 px-8 py-6 h-auto text-lg">
-              Find Pet Boarding
+              Browse Services
             </Button>
           </Link>
         </div>
