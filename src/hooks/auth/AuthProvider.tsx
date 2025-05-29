@@ -14,6 +14,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('Setting up auth state listener...');
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         console.log('Auth state changed:', event, session);
@@ -23,10 +25,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Got existing session:', session);
-      setSession(session);
-      setUser(session?.user ?? null);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting initial session:', error);
+      } else {
+        console.log('Got existing session:', session);
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
       setLoading(false);
     });
 
@@ -66,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (userData.user_type === 'service-provider') {
-          navigate('/service-provider/profile');
+          navigate('/seller-dashboard');
         } else {
           navigate('/');
         }
@@ -78,9 +85,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         navigate('/login');
       }
     } catch (error: any) {
-      console.error('Sign up error:', error);
+      console.error('Sign up error in provider:', error);
       toast({
-        title: "Error",
+        title: "Registration Failed",
         description: error.message,
         variant: "destructive"
       });
@@ -111,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .single();
             
           if (providerError || !providerData || !providerData.description) {
-            navigate('/service-provider/profile');
+            navigate('/seller-dashboard');
           } else {
             navigate('/seller-dashboard');
           }
@@ -120,19 +127,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     } catch (error: any) {
-      console.error('Sign in error:', error);
-      
-      let errorMessage = error.message;
-      
-      if (error.message.includes('Email not confirmed')) {
-        errorMessage = "Please verify your email address before logging in. Check your inbox for a confirmation link.";
-      } else if (error.message.includes('Invalid login credentials')) {
-        errorMessage = "Incorrect email or password. Please try again.";
-      }
-      
+      console.error('Sign in error in provider:', error);
       toast({
-        title: "Error signing in",
-        description: errorMessage,
+        title: "Sign In Failed",
+        description: error.message,
         variant: "destructive"
       });
     } finally {
@@ -145,9 +143,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       await performSignInWithGoogle();
     } catch (error: any) {
-      console.error('Google sign in error:', error);
+      console.error('Google sign in error in provider:', error);
       toast({
-        title: "Error signing in with Google",
+        title: "Google Sign In Failed",
         description: error.message,
         variant: "destructive"
       });
@@ -161,10 +159,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       await performSignOut();
       navigate('/login');
-    } catch (error: any) {
-      console.error('Sign out error:', error);
       toast({
-        title: "Error",
+        title: "Signed out successfully",
+        description: "You have been logged out.",
+      });
+    } catch (error: any) {
+      console.error('Sign out error in provider:', error);
+      toast({
+        title: "Sign Out Failed",
         description: error.message,
         variant: "destructive"
       });
@@ -188,9 +190,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       await signOut();
     } catch (error: any) {
-      console.error('Delete account error:', error);
+      console.error('Delete account error in provider:', error);
       toast({
-        title: "Error deleting account",
+        title: "Account Deletion Failed",
         description: error.message,
         variant: "destructive"
       });
