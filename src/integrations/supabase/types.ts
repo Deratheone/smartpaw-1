@@ -56,6 +56,127 @@ export type Database = {
           },
         ]
       }
+      pet_grooming_services: {
+        Row: {
+          address: string | null
+          available: boolean
+          business_name: string
+          city: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          price_range: string
+          provider_id: string
+          services_offered: string
+          state: string | null
+          updated_at: string
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          available?: boolean
+          business_name: string
+          city?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          price_range: string
+          provider_id: string
+          services_offered: string
+          state?: string | null
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          available?: boolean
+          business_name?: string
+          city?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          price_range?: string
+          provider_id?: string
+          services_offered?: string
+          state?: string | null
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pet_grooming_services_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pet_monitoring_services: {
+        Row: {
+          address: string | null
+          available: boolean
+          city: string | null
+          created_at: string
+          description: string
+          features: string[] | null
+          id: string
+          image_url: string | null
+          monitoring_type: string
+          price_per_month: number
+          provider_id: string
+          service_name: string
+          state: string | null
+          updated_at: string
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          available?: boolean
+          city?: string | null
+          created_at?: string
+          description: string
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          monitoring_type: string
+          price_per_month: number
+          provider_id: string
+          service_name: string
+          state?: string | null
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          available?: boolean
+          city?: string | null
+          created_at?: string
+          description?: string
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          monitoring_type?: string
+          price_per_month?: number
+          provider_id?: string
+          service_name?: string
+          state?: string | null
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pet_monitoring_services_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
