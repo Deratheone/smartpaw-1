@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -32,6 +33,17 @@ interface ServiceListing {
   type: 'boarding' | 'grooming' | 'monitoring';
 }
 
+interface BoardingService {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  available: boolean;
+  created_at: string;
+  image_url?: string;
+  address?: string;
+}
+
 interface BookingStats {
   totalRevenue: number;
   totalBookings: number;
@@ -46,7 +58,7 @@ const SellerDashboard = () => {
   const queryClient = useQueryClient();
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false);
   const [isEditServiceOpen, setIsEditServiceOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<ServiceListing | null>(null);
+  const [selectedBoardingService, setSelectedBoardingService] = useState<BoardingService | null>(null);
   const [serviceType, setServiceType] = useState<'boarding' | 'grooming' | 'monitoring'>('boarding');
 
   // Redirect if not logged in or not a service provider
@@ -119,13 +131,24 @@ const SellerDashboard = () => {
 
   const handleEditServiceSuccess = () => {
     setIsEditServiceOpen(false);
-    setSelectedService(null);
+    setSelectedBoardingService(null);
     queryClient.invalidateQueries({ queryKey: ['all-seller-services', user?.id] });
   };
 
   const handleEditClick = (service: ServiceListing) => {
-    if (service.type === 'boarding') {
-      setSelectedService(service);
+    if (service.type === 'boarding' && service.title && service.price !== undefined) {
+      // Convert ServiceListing to BoardingService format
+      const boardingService: BoardingService = {
+        id: service.id,
+        title: service.title,
+        description: service.description,
+        price: service.price,
+        available: service.available,
+        created_at: service.created_at,
+        image_url: service.image_url,
+        address: service.address
+      };
+      setSelectedBoardingService(boardingService);
       setIsEditServiceOpen(true);
     }
   };
@@ -400,9 +423,9 @@ const SellerDashboard = () => {
             <DialogHeader>
               <DialogTitle>Edit Service</DialogTitle>
             </DialogHeader>
-            {selectedService && (
+            {selectedBoardingService && (
               <EditServiceForm 
-                service={selectedService} 
+                service={selectedBoardingService} 
                 onSuccess={handleEditServiceSuccess} 
               />
             )}
