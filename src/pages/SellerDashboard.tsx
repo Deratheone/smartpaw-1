@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -16,6 +15,7 @@ import AddServiceForm from "@/components/seller/AddServiceForm";
 import EditServiceForm from "@/components/seller/EditServiceForm";
 import AddGroomingServiceForm from "@/components/seller/AddGroomingServiceForm";
 import AddMonitoringServiceForm from "@/components/seller/AddMonitoringServiceForm";
+import BookingsSection from "@/components/seller/BookingsSection";
 
 interface ServiceListing {
   id: string;
@@ -370,10 +370,7 @@ const SellerDashboard = () => {
                 <CardDescription>Manage your scheduled services</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-10">
-                  <Clock className="mx-auto h-10 w-10 text-gray-400 mb-2" />
-                  <p className="text-gray-500">No upcoming appointments</p>
-                </div>
+                <BookingsSection />
               </CardContent>
             </Card>
           </TabsContent>

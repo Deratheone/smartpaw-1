@@ -1,9 +1,10 @@
-
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, MapPin, Star, Clock, Phone, Mail, ExternalLink } from "lucide-react";
+import BookingDialog from "@/components/booking/BookingDialog";
 
 // Mock data for service provider details
 const serviceProviderDetails = {
@@ -53,9 +54,14 @@ const serviceProviderDetails = {
 
 const ServiceDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   // In a real app, we would fetch the data based on the id
   // For this prototype, we'll just use our mock data
   const provider = serviceProviderDetails;
+
+  const handleBookingSuccess = () => {
+    console.log('Booking successful for service detail!');
+  };
 
   return (
     <Layout>
@@ -151,7 +157,14 @@ const ServiceDetail = () => {
                           <h3 className="text-lg font-semibold text-gray-900">{service.name}</h3>
                           <span className="font-medium text-smartpaw-purple">{service.price}</span>
                         </div>
-                        <p className="text-gray-700">{service.description}</p>
+                        <p className="text-gray-700 mb-3">{service.description}</p>
+                        <Button 
+                          size="sm"
+                          className="bg-smartpaw-purple hover:bg-smartpaw-dark-purple"
+                          onClick={() => setIsBookingOpen(true)}
+                        >
+                          Book This Service
+                        </Button>
                       </div>
                     ))}
                   </div>
@@ -256,14 +269,17 @@ const ServiceDetail = () => {
                 <div className="bg-white p-4 rounded border border-gray-200 mb-6">
                   <div className="flex items-center justify-center space-x-2 text-gray-700 mb-4">
                     <Calendar className="h-5 w-5 text-smartpaw-purple" />
-                    <span>Select date and time</span>
+                    <span>Quick booking available</span>
                   </div>
                   <div className="text-center text-gray-500 text-sm">
-                    <p>Calendar booking would be integrated here</p>
+                    <p>Book your appointment instantly</p>
                   </div>
                 </div>
 
-                <Button className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white">
+                <Button 
+                  className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
+                  onClick={() => setIsBookingOpen(true)}
+                >
                   Book Now
                 </Button>
               </div>
@@ -271,6 +287,16 @@ const ServiceDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* Booking Dialog */}
+      <BookingDialog
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        serviceName={provider.name}
+        servicePrice={provider.price}
+        serviceType="grooming"
+        onBookingSuccess={handleBookingSuccess}
+      />
     </Layout>
   );
 };

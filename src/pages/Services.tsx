@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Search } from "lucide-react";
+import BookingDialog from "@/components/booking/BookingDialog";
 
 interface ServiceProvider {
   id: string;
@@ -51,6 +51,12 @@ interface PetMonitoringService {
 
 const Services = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<{
+    name: string;
+    price: string;
+    type: 'boarding' | 'grooming' | 'monitoring';
+  } | null>(null);
 
   const { data: boardingServices, isLoading: isBoardingLoading } = useQuery({
     queryKey: ['pet-boarding-services'],
@@ -124,6 +130,16 @@ const Services = () => {
     return matchesSearch;
   }) || [];
 
+  const handleBookService = (serviceName: string, price: string, type: 'boarding' | 'grooming' | 'monitoring') => {
+    setSelectedService({ name: serviceName, price, type });
+    setIsBookingOpen(true);
+  };
+
+  const handleBookingSuccess = () => {
+    // In a real app, this would refresh bookings data
+    console.log('Booking successful!');
+  };
+
   const renderBoardingServices = () => {
     if (isBoardingLoading) {
       return (
@@ -168,11 +184,19 @@ const Services = () => {
                 <p className="font-medium text-gray-900">{service.provider.business_name}</p>
                 <p className="text-sm text-gray-600">{service.provider.description}</p>
               </div>
-              <Link to={`/services/${service.id}`}>
-                <Button className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white">
-                  View Details
+              <div className="flex gap-2">
+                <Link to={`/services/${service.id}`} className="flex-1">
+                  <Button variant="outline" className="w-full">
+                    View Details
+                  </Button>
+                </Link>
+                <Button 
+                  className="flex-1 bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
+                  onClick={() => handleBookService(service.title, `$${service.price}`, 'boarding')}
+                >
+                  Book Now
                 </Button>
-              </Link>
+              </div>
             </div>
           </div>
         ))}
@@ -224,9 +248,17 @@ const Services = () => {
                 <p className="font-medium text-gray-900 mb-1">Services Offered:</p>
                 <p className="text-sm text-gray-600">{service.services_offered}</p>
               </div>
-              <Button className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white">
-                Contact Groomer
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1">
+                  Contact
+                </Button>
+                <Button 
+                  className="flex-1 bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
+                  onClick={() => handleBookService(service.business_name, service.price_range, 'grooming')}
+                >
+                  Book Now
+                </Button>
+              </div>
             </div>
           </div>
         ))}
@@ -278,9 +310,17 @@ const Services = () => {
                 <p className="font-medium text-gray-900 mb-1">Type: {service.monitoring_type}</p>
                 <p className="text-sm text-gray-600">Features: {service.features.join(', ')}</p>
               </div>
-              <Button className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white">
-                Learn More
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1">
+                  Learn More
+                </Button>
+                <Button 
+                  className="flex-1 bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
+                  onClick={() => handleBookService(service.service_name, `$${service.price_per_month}/month`, 'monitoring')}
+                >
+                  Subscribe
+                </Button>
+              </div>
             </div>
           </div>
         ))}
@@ -337,6 +377,18 @@ const Services = () => {
           </Tabs>
         </div>
       </section>
+
+      {/* Booking Dialog */}
+      {selectedService && (
+        <BookingDialog
+          isOpen={isBookingOpen}
+          onClose={() => setIsBookingOpen(false)}
+          serviceName={selectedService.name}
+          servicePrice={selectedService.price}
+          serviceType={selectedService.type}
+          onBookingSuccess={handleBookingSuccess}
+        />
+      )}
     </Layout>
   );
 };
