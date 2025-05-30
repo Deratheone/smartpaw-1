@@ -123,6 +123,13 @@ const SellerDashboard = () => {
     queryClient.invalidateQueries({ queryKey: ['all-seller-services', user?.id] });
   };
 
+  const handleEditClick = (service: ServiceListing) => {
+    if (service.type === 'boarding') {
+      setSelectedService(service);
+      setIsEditServiceOpen(true);
+    }
+  };
+
   const getServiceDisplayName = (service: ServiceListing) => {
     if (service.type === 'boarding') return service.title;
     if (service.type === 'grooming') return service.business_name;
@@ -300,10 +307,7 @@ const SellerDashboard = () => {
                                   <Button 
                                     size="sm" 
                                     variant="outline"
-                                    onClick={() => {
-                                      setSelectedService(service);
-                                      setIsEditServiceOpen(true);
-                                    }}
+                                    onClick={() => handleEditClick(service)}
                                   >
                                     Edit
                                   </Button>
