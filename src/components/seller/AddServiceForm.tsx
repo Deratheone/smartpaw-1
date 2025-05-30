@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { IndianRupee, MapPin, Image, Upload } from "lucide-react";
 import { 
   Form,
@@ -61,11 +61,23 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       const fileName = `${Math.random().toString(36).substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
       const filePath = `service_images/${fileName}`;
       
+      // Check if bucket exists, if not create it
+      const { data: buckets } = await supabase.storage.listBuckets();
+      const bucketExists = buckets?.some(bucket => bucket.name === 'service-images');
+      
+      if (!bucketExists) {
+        console.log('Service images bucket does not exist, using fallback image URL');
+        return null;
+      }
+      
       const { error: uploadError } = await supabase.storage
         .from('service-images')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        return null;
+      }
       
       const { data } = supabase.storage
         .from('service-images')
@@ -79,7 +91,14 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
   };
 
   const onSubmit = async (data: FormValues) => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: "Authentication Error",
+        description: "You must be logged in to create a service.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     try {
       setIsLoading(true);
@@ -90,27 +109,36 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
         const uploadedUrl = await uploadImage(selectedImage);
         if (uploadedUrl) {
           imageUrl = uploadedUrl;
+        } else {
+          // Use a fallback image if upload fails
+          imageUrl = "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
         }
       }
       
       // Format address for storage in the database
-      const address = data.address ? 
-        `${data.address}, ${data.city || ''}, ${data.state || ''}, ${data.zipCode || ''}`.replace(/,\s*,/g, ',').replace(/,\s*$/,'') : 
-        null;
+      const addressParts = [data.address, data.city, data.state, data.zipCode].filter(Boolean);
+      const address = addressParts.length > 0 ? addressParts.join(', ') : null;
+      
+      const serviceData = {
+        provider_id: user.id,
+        title: data.title,
+        description: data.description,
+        price: parseFloat(data.price),
+        image_url: imageUrl,
+        address: address,
+        available: true
+      };
+
+      console.log('Creating service with data:', serviceData);
       
       const { error } = await supabase
         .from('pet_boarding_services')
-        .insert({
-          provider_id: user.id,
-          title: data.title,
-          description: data.description,
-          price: parseFloat(data.price),
-          image_url: imageUrl,
-          address: address,
-          available: true
-        });
+        .insert(serviceData);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
       
       toast({
         title: "Service Created",
@@ -123,9 +151,10 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       setImagePreview(null);
       onSuccess();
     } catch (error: any) {
+      console.error('Error creating service:', error);
       toast({
         title: "Error Creating Service",
-        description: error.message,
+        description: error.message || "Failed to create service. Please try again.",
         variant: "destructive"
       });
     } finally {
