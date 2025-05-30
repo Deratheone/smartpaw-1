@@ -8,14 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { IndianRupee, MapPin, Image, Upload } from "lucide-react";
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
 
 interface AddServiceFormProps {
   onSuccess: () => void;
@@ -99,6 +91,44 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       });
       return;
     }
+
+    // Validate required fields
+    if (!data.title?.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Service title is required.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!data.description?.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Service description is required.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!data.price?.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Service price is required.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const priceValue = parseFloat(data.price);
+    if (isNaN(priceValue) || priceValue <= 0) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a valid price greater than 0.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     try {
       setIsLoading(true);
@@ -121,9 +151,9 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       
       const serviceData = {
         provider_id: user.id,
-        title: data.title,
-        description: data.description,
-        price: parseFloat(data.price),
+        title: data.title.trim(),
+        description: data.description.trim(),
+        price: priceValue,
         image_url: imageUrl,
         address: address,
         available: true
