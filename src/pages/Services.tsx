@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -136,7 +135,7 @@ const Services = () => {
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 bg-white py-1 px-3 rounded-tr-lg">
-                <span className="text-sm font-medium text-gray-900">${service.price}</span>
+                <span className="text-sm font-medium text-gray-900">{service.price} ₹</span>
               </div>
             </div>
             <div className="p-5">
@@ -160,7 +159,7 @@ const Services = () => {
                 </Link>
                 <Button 
                   className="flex-1 bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white"
-                  onClick={() => handleBookService(service.title, `$${service.price}`, 'boarding')}
+                  onClick={() => handleBookService(service.title, `${service.price} ₹`, 'boarding')}
                 >
                   Book Now
                 </Button>
