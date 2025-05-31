@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -138,17 +139,25 @@ const SellerDashboard = () => {
   // Delete service mutation
   const deleteServiceMutation = useMutation({
     mutationFn: async ({ serviceId, serviceType }: { serviceId: string; serviceType: 'boarding' | 'grooming' | 'monitoring' }) => {
-      let tableName = '';
-      if (serviceType === 'boarding') tableName = 'pet_boarding_services';
-      else if (serviceType === 'grooming') tableName = 'pet_grooming_services';
-      else if (serviceType === 'monitoring') tableName = 'pet_monitoring_services';
-
-      const { error } = await supabase
-        .from(tableName)
-        .delete()
-        .eq('id', serviceId);
-
-      if (error) throw error;
+      if (serviceType === 'boarding') {
+        const { error } = await supabase
+          .from('pet_boarding_services')
+          .delete()
+          .eq('id', serviceId);
+        if (error) throw error;
+      } else if (serviceType === 'grooming') {
+        const { error } = await supabase
+          .from('pet_grooming_services')
+          .delete()
+          .eq('id', serviceId);
+        if (error) throw error;
+      } else if (serviceType === 'monitoring') {
+        const { error } = await supabase
+          .from('pet_monitoring_services')
+          .delete()
+          .eq('id', serviceId);
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       toast({
@@ -169,17 +178,25 @@ const SellerDashboard = () => {
   // Toggle availability mutation
   const toggleAvailabilityMutation = useMutation({
     mutationFn: async ({ serviceId, serviceType, newStatus }: { serviceId: string; serviceType: 'boarding' | 'grooming' | 'monitoring'; newStatus: boolean }) => {
-      let tableName = '';
-      if (serviceType === 'boarding') tableName = 'pet_boarding_services';
-      else if (serviceType === 'grooming') tableName = 'pet_grooming_services';
-      else if (serviceType === 'monitoring') tableName = 'pet_monitoring_services';
-
-      const { error } = await supabase
-        .from(tableName)
-        .update({ available: newStatus })
-        .eq('id', serviceId);
-
-      if (error) throw error;
+      if (serviceType === 'boarding') {
+        const { error } = await supabase
+          .from('pet_boarding_services')
+          .update({ available: newStatus })
+          .eq('id', serviceId);
+        if (error) throw error;
+      } else if (serviceType === 'grooming') {
+        const { error } = await supabase
+          .from('pet_grooming_services')
+          .update({ available: newStatus })
+          .eq('id', serviceId);
+        if (error) throw error;
+      } else if (serviceType === 'monitoring') {
+        const { error } = await supabase
+          .from('pet_monitoring_services')
+          .update({ available: newStatus })
+          .eq('id', serviceId);
+        if (error) throw error;
+      }
     },
     onSuccess: (_, { newStatus }) => {
       toast({
@@ -522,6 +539,34 @@ const SellerDashboard = () => {
       </div>
     </Layout>
   );
+
+  // Helper functions
+  function getServiceDisplayName(service: ServiceListing) {
+    if (service.type === 'boarding') return service.title;
+    if (service.type === 'grooming') return service.business_name;
+    if (service.type === 'monitoring') return service.service_name;
+    return 'Unknown Service';
+  }
+
+  function getServicePrice(service: ServiceListing) {
+    if (service.type === 'boarding') return `$${service.price?.toFixed(2)}`;
+    if (service.type === 'grooming') return service.price_range;
+    if (service.type === 'monitoring') return `$${service.price_per_month?.toFixed(2)}/month`;
+    return 'N/A';
+  }
+
+  function renderAddServiceForm() {
+    switch (serviceType) {
+      case 'boarding':
+        return <AddServiceForm onSuccess={handleAddServiceSuccess} />;
+      case 'grooming':
+        return <AddGroomingServiceForm onSuccess={handleAddServiceSuccess} />;
+      case 'monitoring':
+        return <AddMonitoringServiceForm onSuccess={handleAddServiceSuccess} />;
+      default:
+        return <AddServiceForm onSuccess={handleAddServiceSuccess} />;
+    }
+  }
 };
 
 export default SellerDashboard;
