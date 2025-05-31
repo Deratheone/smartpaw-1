@@ -135,6 +135,68 @@ const SellerDashboard = () => {
     queryClient.invalidateQueries({ queryKey: ['all-seller-services', user?.id] });
   };
 
+  // Delete service mutation
+  const deleteServiceMutation = useMutation({
+    mutationFn: async ({ serviceId, serviceType }: { serviceId: string; serviceType: 'boarding' | 'grooming' | 'monitoring' }) => {
+      let tableName = '';
+      if (serviceType === 'boarding') tableName = 'pet_boarding_services';
+      else if (serviceType === 'grooming') tableName = 'pet_grooming_services';
+      else if (serviceType === 'monitoring') tableName = 'pet_monitoring_services';
+
+      const { error } = await supabase
+        .from(tableName)
+        .delete()
+        .eq('id', serviceId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Service Deleted",
+        description: "Your service has been deleted successfully.",
+      });
+      queryClient.invalidateQueries({ queryKey: ['all-seller-services', user?.id] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error Deleting Service",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  });
+
+  // Toggle availability mutation
+  const toggleAvailabilityMutation = useMutation({
+    mutationFn: async ({ serviceId, serviceType, newStatus }: { serviceId: string; serviceType: 'boarding' | 'grooming' | 'monitoring'; newStatus: boolean }) => {
+      let tableName = '';
+      if (serviceType === 'boarding') tableName = 'pet_boarding_services';
+      else if (serviceType === 'grooming') tableName = 'pet_grooming_services';
+      else if (serviceType === 'monitoring') tableName = 'pet_monitoring_services';
+
+      const { error } = await supabase
+        .from(tableName)
+        .update({ available: newStatus })
+        .eq('id', serviceId);
+
+      if (error) throw error;
+    },
+    onSuccess: (_, { newStatus }) => {
+      toast({
+        title: newStatus ? "Service Activated" : "Service Deactivated",
+        description: `Your service has been ${newStatus ? 'activated' : 'deactivated'} successfully.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ['all-seller-services', user?.id] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error Updating Service",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleEditClick = (service: ServiceListing) => {
     if (service.type === 'boarding' && service.title && service.price !== undefined) {
       // Convert ServiceListing to BoardingService format
@@ -150,7 +212,31 @@ const SellerDashboard = () => {
       };
       setSelectedBoardingService(boardingService);
       setIsEditServiceOpen(true);
+    } else {
+      toast({
+        title: "Edit Not Available",
+        description: "Edit functionality is currently only available for boarding services.",
+        variant: "destructive"
+      });
     }
+  };
+
+  const handleDeleteClick = (service: ServiceListing) => {
+    if (confirm("Are you sure you want to delete this service? This action cannot be undone.")) {
+      deleteServiceMutation.mutate({
+        serviceId: service.id,
+        serviceType: service.type
+      });
+    }
+  };
+
+  const handleToggleAvailability = (service: ServiceListing) => {
+    const newStatus = !service.available;
+    toggleAvailabilityMutation.mutate({
+      serviceId: service.id,
+      serviceType: service.type,
+      newStatus
+    });
   };
 
   const getServiceDisplayName = (service: ServiceListing) => {
@@ -331,6 +417,7 @@ const SellerDashboard = () => {
                                     size="sm" 
                                     variant="outline"
                                     onClick={() => handleEditClick(service)}
+                                    disabled={toggleAvailabilityMutation.isPending || deleteServiceMutation.isPending}
                                   >
                                     Edit
                                   </Button>
@@ -341,15 +428,19 @@ const SellerDashboard = () => {
                                   className={service.available 
                                     ? "text-orange-500 border-orange-200 hover:bg-orange-50"
                                     : "text-green-500 border-green-200 hover:bg-green-50"}
+                                  onClick={() => handleToggleAvailability(service)}
+                                  disabled={toggleAvailabilityMutation.isPending || deleteServiceMutation.isPending}
                                 >
-                                  {service.available ? 'Deactivate' : 'Activate'}
+                                  {toggleAvailabilityMutation.isPending ? 'Updating...' : (service.available ? 'Deactivate' : 'Activate')}
                                 </Button>
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
                                   className="text-red-500 border-red-200 hover:bg-red-50"
+                                  onClick={() => handleDeleteClick(service)}
+                                  disabled={deleteServiceMutation.isPending || toggleAvailabilityMutation.isPending}
                                 >
-                                  Delete
+                                  {deleteServiceMutation.isPending ? 'Deleting...' : 'Delete'}
                                 </Button>
                               </div>
                             </div>
