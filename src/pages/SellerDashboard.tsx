@@ -1,4 +1,5 @@
 
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -539,34 +540,7 @@ const SellerDashboard = () => {
       </div>
     </Layout>
   );
-
-  // Helper functions
-  function getServiceDisplayName(service: ServiceListing) {
-    if (service.type === 'boarding') return service.title;
-    if (service.type === 'grooming') return service.business_name;
-    if (service.type === 'monitoring') return service.service_name;
-    return 'Unknown Service';
-  }
-
-  function getServicePrice(service: ServiceListing) {
-    if (service.type === 'boarding') return `$${service.price?.toFixed(2)}`;
-    if (service.type === 'grooming') return service.price_range;
-    if (service.type === 'monitoring') return `$${service.price_per_month?.toFixed(2)}/month`;
-    return 'N/A';
-  }
-
-  function renderAddServiceForm() {
-    switch (serviceType) {
-      case 'boarding':
-        return <AddServiceForm onSuccess={handleAddServiceSuccess} />;
-      case 'grooming':
-        return <AddGroomingServiceForm onSuccess={handleAddServiceSuccess} />;
-      case 'monitoring':
-        return <AddMonitoringServiceForm onSuccess={handleAddServiceSuccess} />;
-      default:
-        return <AddServiceForm onSuccess={handleAddServiceSuccess} />;
-    }
-  }
 };
 
 export default SellerDashboard;
+
