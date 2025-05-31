@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/auth";
 import { Button } from "@/components/ui/button";
 import { Menu, X, User } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { 
   Tooltip,
   TooltipContent,
@@ -45,7 +46,7 @@ const Navbar = () => {
   );
 
   return (
-    <nav className="bg-white shadow-sm py-4 sticky top-0 z-50">
+    <nav className="bg-background border-b shadow-sm py-4 sticky top-0 z-50">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-2">
@@ -58,17 +59,18 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden md:flex space-x-6 items-center">
-            <Link to="/" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+            <Link to="/" className="text-foreground hover:text-smartpaw-purple transition-colors">
               Home
             </Link>
-            <Link to="/services" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+            <Link to="/services" className="text-foreground hover:text-smartpaw-purple transition-colors">
               Services
             </Link>
             <ComingSoonLink>Shop</ComingSoonLink>
             <ComingSoonLink>Pet Monitoring</ComingSoonLink>
-            <Link to="/about" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+            <Link to="/about" className="text-foreground hover:text-smartpaw-purple transition-colors">
               About Us
             </Link>
+            <ThemeToggle />
             {user ? (
               <>
                 {isServiceProvider && (
@@ -77,7 +79,7 @@ const Navbar = () => {
                     className={`${
                       location.pathname === "/seller-dashboard" 
                         ? "text-smartpaw-purple font-medium" 
-                        : "text-gray-700 hover:text-smartpaw-purple"
+                        : "text-foreground hover:text-smartpaw-purple"
                     } transition-colors`}
                   >
                     Seller Dashboard
@@ -88,7 +90,7 @@ const Navbar = () => {
                   className={`${
                     location.pathname === "/profile" 
                       ? "text-smartpaw-purple font-medium" 
-                      : "text-gray-700 hover:text-smartpaw-purple"
+                      : "text-foreground hover:text-smartpaw-purple"
                   } transition-colors flex items-center`}
                 >
                   <User size={18} className="mr-1" />
@@ -96,7 +98,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={() => signOut()}
-                  className="text-gray-700 hover:text-smartpaw-purple transition-colors"
+                  className="text-foreground hover:text-smartpaw-purple transition-colors"
                 >
                   Sign Out
                 </button>
@@ -117,7 +119,8 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeToggle />
             <Button 
               variant="ghost" 
               size="icon" 
@@ -131,15 +134,15 @@ const Navbar = () => {
 
         {isOpen && (
           <div className="md:hidden mt-4 pb-4 flex flex-col space-y-4">
-            <Link to="/" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+            <Link to="/" className="text-foreground hover:text-smartpaw-purple transition-colors">
               Home
             </Link>
-            <Link to="/services" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+            <Link to="/services" className="text-foreground hover:text-smartpaw-purple transition-colors">
               Services
             </Link>
-            <span className="text-gray-400">Shop (Coming Soon)</span>
-            <span className="text-gray-400">Pet Monitoring (Coming Soon)</span>
-            <Link to="/about" className="text-gray-700 hover:text-smartpaw-purple transition-colors">
+            <span className="text-muted-foreground">Shop (Coming Soon)</span>
+            <span className="text-muted-foreground">Pet Monitoring (Coming Soon)</span>
+            <Link to="/about" className="text-foreground hover:text-smartpaw-purple transition-colors">
               About Us
             </Link>
             {user ? (
@@ -150,7 +153,7 @@ const Navbar = () => {
                     className={`${
                       location.pathname === "/seller-dashboard" 
                         ? "text-smartpaw-purple font-medium" 
-                        : "text-gray-700 hover:text-smartpaw-purple"
+                        : "text-foreground hover:text-smartpaw-purple"
                     } transition-colors`}
                   >
                     Seller Dashboard
@@ -161,7 +164,7 @@ const Navbar = () => {
                   className={`${
                     location.pathname === "/profile" 
                       ? "text-smartpaw-purple font-medium" 
-                      : "text-gray-700 hover:text-smartpaw-purple"
+                      : "text-foreground hover:text-smartpaw-purple"
                   } transition-colors flex items-center`}
                 >
                   <User size={18} className="mr-1" />
@@ -169,7 +172,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={() => signOut()}
-                  className="text-gray-700 hover:text-smartpaw-purple transition-colors"
+                  className="text-foreground hover:text-smartpaw-purple transition-colors text-left"
                 >
                   Sign Out
                 </button>
