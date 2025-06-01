@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/auth";
 import { Button } from "@/components/ui/button";
 import { Menu, X, User } from "lucide-react";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { 
   Tooltip,
   TooltipContent,
@@ -70,7 +69,6 @@ const Navbar = () => {
             <Link to="/about" className="text-foreground hover:text-smartpaw-purple transition-colors">
               About Us
             </Link>
-            <ThemeToggle />
             {user ? (
               <>
                 {isServiceProvider && (
@@ -120,7 +118,6 @@ const Navbar = () => {
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
-            <ThemeToggle />
             <Button 
               variant="ghost" 
               size="icon" 
