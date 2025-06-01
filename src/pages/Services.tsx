@@ -262,9 +262,19 @@ const Services = () => {
 
           {/* Service Tabs */}
           <Tabs defaultValue="boarding" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="boarding" className="text-lg py-3">Pet Boarding</TabsTrigger>
-              <TabsTrigger value="grooming" className="text-lg py-3">Pet Grooming</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 mb-8 h-12 p-1 bg-white border border-gray-200 rounded-lg">
+              <TabsTrigger 
+                value="boarding" 
+                className="text-base font-medium py-2 px-4 rounded-md data-[state=active]:bg-smartpaw-purple data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 transition-all duration-200"
+              >
+                Pet Boarding
+              </TabsTrigger>
+              <TabsTrigger 
+                value="grooming" 
+                className="text-base font-medium py-2 px-4 rounded-md data-[state=active]:bg-smartpaw-purple data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 transition-all duration-200"
+              >
+                Pet Grooming
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="boarding">
