@@ -10,20 +10,18 @@ const Home = () => {
       {/* Hero Section */}
       <section className="py-16 md:py-24 bg-gradient-to-b from-white to-smartpaw-gray">
         <div className="container mx-auto px-4 md:px-6">
-          {/* Logo Section */}
-          <div className="text-center mb-12">
-            <div className="flex justify-center mb-6">
-              <img
-                src="/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png"
-                alt="SmartPaw Logo"
-                className="h-20 md:h-24 lg:h-28 w-auto"
-              />
-            </div>
-            <div className="w-24 h-1 bg-smartpaw-purple mx-auto rounded-full"></div>
-          </div>
-
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+              {/* Logo integrated into the left side */}
+              <div className="flex items-center justify-center md:justify-start mb-8">
+                <img
+                  src="/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png"
+                  alt="SmartPaw Logo"
+                  className="h-16 md:h-20 w-auto mr-4"
+                />
+                <div className="w-16 h-1 bg-smartpaw-purple rounded-full"></div>
+              </div>
+              
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
                 Professional <span className="text-smartpaw-purple">Pet Care Services</span>
               </h1>
