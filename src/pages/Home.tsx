@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
@@ -17,9 +16,8 @@ const Home = () => {
                 <img
                   src="/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png"
                   alt="SmartPaw Logo"
-                  className="h-16 md:h-20 w-auto mr-4"
+                  className="h-24 md:h-28 lg:h-32 w-auto"
                 />
-                <div className="w-16 h-1 bg-smartpaw-purple rounded-full"></div>
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
@@ -40,7 +38,7 @@ const Home = () => {
               <div className="relative">
                 <div className="rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    src="/lovable-uploads/f4d6fa06-b043-4d32-ba66-b1e5111cc9b4.png"
                     alt="Happy pets - dog and cat together"
                     className="w-full h-auto rounded-lg"
                   />
