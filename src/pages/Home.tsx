@@ -10,6 +10,18 @@ const Home = () => {
       {/* Hero Section */}
       <section className="py-16 md:py-24 bg-gradient-to-b from-white to-smartpaw-gray">
         <div className="container mx-auto px-4 md:px-6">
+          {/* Logo Section */}
+          <div className="text-center mb-12">
+            <div className="flex justify-center mb-6">
+              <img
+                src="/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png"
+                alt="SmartPaw Logo"
+                className="h-20 md:h-24 lg:h-28 w-auto"
+              />
+            </div>
+            <div className="w-24 h-1 bg-smartpaw-purple mx-auto rounded-full"></div>
+          </div>
+
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
@@ -30,8 +42,8 @@ const Home = () => {
               <div className="relative">
                 <div className="rounded-lg overflow-hidden shadow-xl">
                   <img
-                    src="https://images.unsplash.com/photo-1535268647677-300dbf3d78d1"
-                    alt="Cute Pet"
+                    src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    alt="Happy pets - dog and cat together"
                     className="w-full h-auto rounded-lg"
                   />
                 </div>
