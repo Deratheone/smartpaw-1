@@ -74,46 +74,61 @@ const Home = () => {
               </div>
             </Link>
             
-            <Link to="/services?tab=grooming" className="group">
-              <div className="bg-smartpaw-peach bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer">
+            <div className="group relative">
+              <div className="bg-smartpaw-peach bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-not-allowed opacity-60">
                 <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                   <span className="text-3xl">✂️</span>
                 </div>
                 <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Grooming</h3>
-                <p className="text-gray-700">Professional grooming for all breeds</p>
+                <p className="text-gray-700 mb-3">Professional grooming for all breeds</p>
+                <div className="bg-yellow-100 border border-yellow-300 rounded-md p-2">
+                  <p className="text-sm font-medium text-yellow-800">Coming Soon</p>
+                </div>
               </div>
-            </Link>
+            </div>
             
-            <div className="bg-smartpaw-green bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
+            <div className="bg-smartpaw-green bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🐕</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Dog Walking</h3>
-              <p className="text-gray-700">Daily walks for your dog (up to 5 km)</p>
+              <p className="text-gray-700 mb-3">Daily walks for your dog (up to 5 km)</p>
+              <div className="bg-yellow-100 border border-yellow-300 rounded-md p-2">
+                <p className="text-sm font-medium text-yellow-800">Coming Soon</p>
+              </div>
             </div>
             
-            <div className="bg-smartpaw-blue bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
+            <div className="bg-smartpaw-blue bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🏥</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Vet Visits</h3>
-              <p className="text-gray-700">On-call veterinary care at your doorstep</p>
+              <p className="text-gray-700 mb-3">On-call veterinary care at your doorstep</p>
+              <div className="bg-yellow-100 border border-yellow-300 rounded-md p-2">
+                <p className="text-sm font-medium text-yellow-800">Coming Soon</p>
+              </div>
             </div>
             
-            <div className="bg-smartpaw-pink bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
+            <div className="bg-smartpaw-pink bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🚕</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Taxi</h3>
-              <p className="text-gray-700">Transport for your pet (within 20 km)</p>
+              <p className="text-gray-700 mb-3">Transport for your pet (within 20 km)</p>
+              <div className="bg-yellow-100 border border-yellow-300 rounded-md p-2">
+                <p className="text-sm font-medium text-yellow-800">Coming Soon</p>
+              </div>
             </div>
             
-            <div className="bg-smartpaw-purple bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
+            <div className="bg-smartpaw-purple bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🎓</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Training</h3>
-              <p className="text-gray-700">Obedience and behavior training for all pets</p>
+              <p className="text-gray-700 mb-3">Obedience and behavior training for all pets</p>
+              <div className="bg-yellow-100 border border-yellow-300 rounded-md p-2">
+                <p className="text-sm font-medium text-yellow-800">Coming Soon</p>
+              </div>
             </div>
           </div>
         </div>
@@ -154,10 +169,10 @@ const Home = () => {
       <section className="py-20 bg-smartpaw-purple">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-            Ready to Find Pet Care Services?
+            Ready to Find Pet Boarding Services?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Discover trusted boarding and grooming services for your furry friend today.
+            Discover trusted boarding services for your furry friend today.
           </p>
           <Link to="/services">
             <Button className="bg-white text-smartpaw-purple hover:bg-gray-100 px-8 py-6 h-auto text-lg">
