@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
@@ -59,53 +60,60 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <Link to="/services?tab=boarding" className="group">
+              <div className="bg-smartpaw-yellow bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer">
+                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
+                  <span className="text-3xl">🏨</span>
+                </div>
+                <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
+                <p className="text-gray-700 mb-3">Safe and comfortable boarding for your pets</p>
+                <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md">
+                  <p className="font-medium">✓ Pet Monitoring Available</p>
+                  <p className="text-xs">24/7 health and activity tracking during boarding</p>
+                </div>
+              </div>
+            </Link>
+            
+            <Link to="/services?tab=grooming" className="group">
+              <div className="bg-smartpaw-peach bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer">
+                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
+                  <span className="text-3xl">✂️</span>
+                </div>
+                <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Grooming</h3>
+                <p className="text-gray-700">Professional grooming for all breeds</p>
+              </div>
+            </Link>
+            
             <div className="bg-smartpaw-green bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🐕</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Dog Walking</h3>
-              <p className="text-gray-700 mb-2">Daily walks for your dog (up to 5 km)</p>
-              <p className="text-sm font-semibold text-smartpaw-purple">₹299 / walk</p>
+              <p className="text-gray-700">Daily walks for your dog (up to 5 km)</p>
             </div>
-            <div className="bg-smartpaw-peach bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
-                <span className="text-3xl">✂️</span>
-              </div>
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Grooming</h3>
-              <p className="text-gray-700 mb-2">Professional grooming for all breeds</p>
-              <p className="text-sm font-semibold text-smartpaw-purple">₹799 / session</p>
-            </div>
+            
             <div className="bg-smartpaw-blue bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🏥</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Vet Visits</h3>
-              <p className="text-gray-700 mb-2">On-call veterinary care at your doorstep</p>
-              <p className="text-sm font-semibold text-smartpaw-purple">₹999 / visit</p>
+              <p className="text-gray-700">On-call veterinary care at your doorstep</p>
             </div>
-            <div className="bg-smartpaw-yellow bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
-                <span className="text-3xl">🏨</span>
-              </div>
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
-              <p className="text-gray-700 mb-2">Safe and comfortable boarding for your pets</p>
-              <p className="text-sm font-semibold text-smartpaw-purple">₹499 / night</p>
-            </div>
+            
             <div className="bg-smartpaw-pink bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🚕</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Taxi</h3>
-              <p className="text-gray-700 mb-2">Transport for your pet (within 20 km)</p>
-              <p className="text-sm font-semibold text-smartpaw-purple">₹399 / trip</p>
+              <p className="text-gray-700">Transport for your pet (within 20 km)</p>
             </div>
+            
             <div className="bg-smartpaw-purple bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🎓</span>
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Training</h3>
-              <p className="text-gray-700 mb-2">Obedience and behavior training for all pets</p>
-              <p className="text-sm font-semibold text-smartpaw-purple">₹1,499 / course</p>
+              <p className="text-gray-700">Obedience and behavior training for all pets</p>
             </div>
           </div>
         </div>

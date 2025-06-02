@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
@@ -45,6 +45,18 @@ const Services = () => {
     price: string;
     type: 'boarding' | 'grooming';
   } | null>(null);
+  const [activeTab, setActiveTab] = useState("boarding");
+
+  const location = useLocation();
+
+  // Handle URL parameter for tab navigation
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const tab = urlParams.get('tab');
+    if (tab === 'boarding' || tab === 'grooming') {
+      setActiveTab(tab);
+    }
+  }, [location]);
 
   const { data: boardingServices, isLoading: isBoardingLoading } = useQuery({
     queryKey: ['pet-boarding-services'],
@@ -261,7 +273,7 @@ const Services = () => {
           </div>
 
           {/* Service Tabs */}
-          <Tabs defaultValue="boarding" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8 h-12 p-1 bg-white border border-gray-200 rounded-lg">
               <TabsTrigger 
                 value="boarding" 
