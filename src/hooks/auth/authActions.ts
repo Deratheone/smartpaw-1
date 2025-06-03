@@ -1,7 +1,6 @@
 
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/components/ui/use-toast";
-import { User } from "@supabase/supabase-js";
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 export const performSignUp = async (
   email: string, 
@@ -12,156 +11,115 @@ export const performSignUp = async (
     business_name?: string;
   }
 ) => {
-  console.log('Starting sign up process with:', email, userData);
-  
-  try {
-    if (userData.user_type === 'service-provider' && !userData.business_name) {
-      userData.business_name = userData.full_name;
-    }
-    
-    // Get the current origin for the redirect URL
-    const origin = window.location.origin;
-    const redirectUrl = `${origin}/login`;
-    console.log('Using redirect URL:', redirectUrl);
-    
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: userData,
-        emailRedirectTo: redirectUrl
-      }
-    });
-
-    if (error) {
-      console.error('Supabase signup error:', error);
-      throw error;
-    }
-
-    console.log('Sign up result:', data);
-    return data;
-  } catch (error: any) {
-    console.error('Sign up error details:', error);
-    
-    // Handle specific error types
-    if (error.message?.includes('fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
-    }
-    
-    if (error.message?.includes('Email rate limit exceeded')) {
-      throw new Error('Too many signup attempts. Please wait a few minutes before trying again.');
-    }
-    
-    if (error.message?.includes('User already registered')) {
-      throw new Error('An account with this email already exists. Please try logging in instead.');
-    }
-    
-    // Default error message
-    throw new Error(error.message || 'Failed to create account. Please try again.');
+  // Validate input data
+  if (!email?.trim() || !password?.trim() || !userData.full_name?.trim()) {
+    throw new Error('All required fields must be provided');
   }
+
+  if (password.length < 6) {
+    throw new Error('Password must be at least 6 characters long');
+  }
+
+  if (userData.user_type === 'service-provider' && !userData.business_name?.trim()) {
+    throw new Error('Business name is required for service providers');
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: {
+      data: {
+        full_name: userData.full_name.trim(),
+        user_type: userData.user_type,
+        business_name: userData.business_name?.trim() || null
+      }
+    }
+  });
+
+  if (error) {
+    console.error('Sign up error:', error);
+    throw error;
+  }
+
+  return data;
 };
 
 export const performSignIn = async (email: string, password: string) => {
-  console.log('Starting sign in process with:', email);
-  
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      console.error('Supabase signin error:', error);
-      throw error;
-    }
-
-    console.log('Sign in successful:', data);
-    return data;
-  } catch (error: any) {
-    console.error('Sign in error details:', error);
-    
-    // Handle specific error types
-    if (error.message?.includes('fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
-    }
-    
-    if (error.message?.includes('Invalid login credentials')) {
-      throw new Error('Incorrect email or password. Please try again.');
-    }
-    
-    if (error.message?.includes('Email not confirmed')) {
-      throw new Error('Please verify your email address before logging in. Check your inbox for a confirmation link.');
-    }
-    
-    // Default error message
-    throw new Error(error.message || 'Failed to sign in. Please try again.');
+  // Validate input
+  if (!email?.trim() || !password?.trim()) {
+    throw new Error('Email and password are required');
   }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password,
+  });
+
+  if (error) {
+    console.error('Sign in error:', error);
+    throw error;
+  }
+
+  return data;
 };
 
 export const performSignInWithGoogle = async () => {
-  try {
-    // Get the current origin for proper redirect
-    const origin = window.location.origin;
-    const redirectUrl = `${origin}/login`;
-    
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: redirectUrl
-      }
-    });
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/`
+    }
+  });
 
-    if (error) {
-      console.error('Google signin error:', error);
-      throw error;
-    }
-  } catch (error: any) {
-    console.error('Google sign in error details:', error);
-    
-    if (error.message?.includes('fetch')) {
-      throw new Error('Network connection failed. Please check your internet connection and try again.');
-    }
-    
-    throw new Error(error.message || 'Failed to sign in with Google. Please try again.');
+  if (error) {
+    console.error('Google sign in error:', error);
+    throw error;
   }
+
+  return data;
 };
 
 export const performSignOut = async () => {
-  try {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Sign out error:', error);
-      throw error;
-    }
-  } catch (error: any) {
-    console.error('Sign out error details:', error);
-    throw new Error(error.message || 'Failed to sign out. Please try again.');
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error('Sign out error:', error);
+    throw error;
   }
 };
 
 export const performDeleteAccount = async (user: User) => {
+  if (!user) {
+    throw new Error('User not found');
+  }
+
   try {
-    // Delete service provider data if applicable
-    if (user.user_metadata.user_type === 'service-provider') {
-      const { error: providerError } = await supabase
-        .from('service_providers')
-        .delete()
-        .eq('id', user.id);
-        
-      if (providerError) {
-        console.error('Error deleting service provider data:', providerError);
-        throw providerError;
-      }
-    }
+    // Get the current session to pass the JWT token
+    const { data: { session } } = await supabase.auth.getSession();
     
-    // Delete the user account
-    const { error } = await supabase.auth.admin.deleteUser(user.id);
-    if (error) {
-      console.error('Error deleting user account:', error);
-      throw error;
+    if (!session?.access_token) {
+      throw new Error('No valid session found');
     }
+
+    // Call the secure Edge Function instead of using admin operations
+    const response = await fetch(`${supabase.supabaseUrl}/functions/v1/delete-account`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json',
+        'apikey': supabase.supabaseKey
+      }
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to delete account');
+    }
+
+    console.log('Account deletion successful');
+    
   } catch (error: any) {
-    console.error('Delete account error details:', error);
-    throw new Error(error.message || 'Failed to delete account. Please try again.');
+    console.error('Delete account error:', error);
+    throw new Error(error.message || 'Failed to delete account');
   }
 };
