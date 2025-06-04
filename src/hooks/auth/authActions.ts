@@ -100,13 +100,13 @@ export const performDeleteAccount = async (user: User) => {
       throw new Error('No valid session found');
     }
 
-    // Call the secure Edge Function instead of using admin operations
-    const response = await fetch(`${supabase.supabaseUrl}/functions/v1/delete-account`, {
+    // Call the secure Edge Function with the correct URL and API key
+    const response = await fetch('https://iftilgsuxvrobkriandj.supabase.co/functions/v1/delete-account', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session.access_token}`,
         'Content-Type': 'application/json',
-        'apikey': supabase.supabaseKey
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmdGlsZ3N1eHZyb2JrcmlhbmRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUzMTczNDksImV4cCI6MjA2MDg5MzM0OX0.NxB7KoJR64StI4ZdpkBgy-m4X28IPeMMttBbomC4Hpw'
       }
     });
 
