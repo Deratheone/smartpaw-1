@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
@@ -75,9 +76,13 @@ const Home = () => {
                 </div>
                 <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
                 <p className="text-gray-700 mb-3">Safe and comfortable boarding for your pets</p>
-                <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md">
+                <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md mb-2">
                   <p className="font-medium">✓ Pet Monitoring Available</p>
                   <p className="text-xs">24/7 health and activity tracking during boarding</p>
+                </div>
+                <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md">
+                  <p className="font-medium">✓ Video Feed from Shop</p>
+                  <p className="text-xs text-yellow-700">(Coming Soon)</p>
                 </div>
               </div>
             </Link>
@@ -167,7 +172,8 @@ const Home = () => {
 
             <div className="text-center p-6 bg-white rounded-xl shadow-sm">
               <h3 className="text-xl font-bold mb-2 text-gray-900">Pet Monitoring</h3>
-              <p className="text-gray-600">Keep track of your pet's health and activities</p>
+              <p className="text-gray-600 mb-2">Keep track of your pet's health and activities</p>
+              <p className="text-sm text-gray-500">Includes live video feed from boarding facilities</p>
             </div>
           </div>
         </div>
