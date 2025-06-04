@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
@@ -76,13 +75,10 @@ const Home = () => {
                 </div>
                 <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
                 <p className="text-gray-700 mb-3">Safe and comfortable boarding for your pets</p>
-                <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md mb-2">
+                <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md">
                   <p className="font-medium">✓ Pet Monitoring Available</p>
                   <p className="text-xs">24/7 health and activity tracking during boarding</p>
-                </div>
-                <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md">
-                  <p className="font-medium">✓ Video Feed from Shop</p>
-                  <p className="text-xs text-yellow-700">(Coming Soon)</p>
+                  <p className="text-xs text-yellow-700">• Live video feed from shop (Coming Soon)</p>
                 </div>
               </div>
             </Link>
