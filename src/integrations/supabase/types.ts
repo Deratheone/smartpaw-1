@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          booking_date: string
+          created_at: string | null
+          end_date: string | null
+          id: string
+          notes: string | null
+          provider_id: string
+          service_id: string
+          service_type: string
+          start_date: string
+          status: string
+          total_amount: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          booking_date: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          provider_id: string
+          service_id: string
+          service_type: string
+          start_date: string
+          status?: string
+          total_amount: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          provider_id?: string
+          service_id?: string
+          service_type?: string
+          start_date?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       pet_boarding_services: {
         Row: {
           address: string | null

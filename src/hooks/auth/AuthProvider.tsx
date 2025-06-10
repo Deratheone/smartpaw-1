@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 import { AuthContext } from './AuthContext';
 import { performSignUp, performSignIn, performSignInWithGoogle, performSignOut, performDeleteAccount } from './authActions';
+import { validateEmail, validatePassword, validateUserData, sanitizeInput, authRateLimiter } from '@/utils/security';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -52,7 +53,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       
-      const data = await performSignUp(email, password, userData);
+      // Rate limiting check
+      if (!authRateLimiter.isAllowed(`signup-${email}`)) {
+        toast({
+          title: "Too many attempts",
+          description: "Please wait before trying again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Validate inputs
+      if (!validateEmail(email)) {
+        toast({
+          title: "Invalid email",
+          description: "Please enter a valid email address.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.isValid) {
+        toast({
+          title: "Invalid password",
+          description: passwordValidation.message,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Sanitize and validate user data
+      const sanitizedUserData = {
+        full_name: sanitizeInput(userData.full_name),
+        user_type: userData.user_type,
+        business_name: userData.business_name ? sanitizeInput(userData.business_name) : undefined
+      };
+
+      const userValidation = validateUserData(sanitizedUserData);
+      if (!userValidation.isValid) {
+        toast({
+          title: "Invalid user data",
+          description: userValidation.errors.join(', '),
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      const data = await performSignUp(email, password, sanitizedUserData);
       
       if (!data.user || data.user.identities?.length === 0) {
         toast({
@@ -72,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           description: "Welcome to SmartPaw.",
         });
 
-        if (userData.user_type === 'service-provider') {
+        if (sanitizedUserData.user_type === 'service-provider') {
           navigate('/seller-dashboard');
         } else {
           navigate('/');
@@ -99,6 +147,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
+      
+      // Rate limiting check
+      if (!authRateLimiter.isAllowed(`signin-${email}`)) {
+        toast({
+          title: "Too many attempts",
+          description: "Please wait before trying again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Validate inputs
+      if (!validateEmail(email)) {
+        toast({
+          title: "Invalid email",
+          description: "Please enter a valid email address.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (!password?.trim()) {
+        toast({
+          title: "Password required",
+          description: "Please enter your password.",
+          variant: "destructive"
+        });
+        return;
+      }
       
       const data = await performSignIn(email, password);
       

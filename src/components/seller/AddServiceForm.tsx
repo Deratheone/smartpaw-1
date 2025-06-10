@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { IndianRupee, MapPin, Image, Upload } from "lucide-react";
+import { validateServiceData, sanitizeInput } from "@/utils/security";
 
 interface AddServiceFormProps {
   onSuccess: () => void;
@@ -36,6 +37,27 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select an image smaller than 5MB.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Please select a valid image file.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       setSelectedImage(file);
       
       // Create preview
@@ -92,39 +114,20 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       return;
     }
 
-    // Validate required fields
-    if (!data.title?.trim()) {
-      toast({
-        title: "Validation Error",
-        description: "Service title is required.",
-        variant: "destructive"
-      });
-      return;
-    }
+    // Sanitize inputs
+    const sanitizedData = {
+      title: sanitizeInput(data.title),
+      description: sanitizeInput(data.description),
+      price: parseFloat(data.price),
+      address: data.address ? sanitizeInput(data.address) : undefined
+    };
 
-    if (!data.description?.trim()) {
+    // Validate service data
+    const validation = validateServiceData(sanitizedData);
+    if (!validation.isValid) {
       toast({
         title: "Validation Error",
-        description: "Service description is required.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!data.price?.trim()) {
-      toast({
-        title: "Validation Error",
-        description: "Service price is required.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const priceValue = parseFloat(data.price);
-    if (isNaN(priceValue) || priceValue <= 0) {
-      toast({
-        title: "Validation Error",
-        description: "Please enter a valid price greater than 0.",
+        description: validation.errors.join(', '),
         variant: "destructive"
       });
       return;
@@ -146,14 +149,19 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       }
       
       // Format address for storage in the database
-      const addressParts = [data.address, data.city, data.state, data.zipCode].filter(Boolean);
+      const addressParts = [
+        data.address ? sanitizeInput(data.address) : null,
+        data.city ? sanitizeInput(data.city) : null,
+        data.state ? sanitizeInput(data.state) : null,
+        data.zipCode ? sanitizeInput(data.zipCode) : null
+      ].filter(Boolean);
       const address = addressParts.length > 0 ? addressParts.join(', ') : null;
       
       const serviceData = {
         provider_id: user.id,
-        title: data.title.trim(),
-        description: data.description.trim(),
-        price: priceValue,
+        title: sanitizedData.title,
+        description: sanitizedData.description,
+        price: sanitizedData.price,
         image_url: imageUrl,
         address: address,
         available: true
@@ -197,7 +205,10 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       <div>
         <label className="block text-sm font-medium mb-1">Service Title</label>
         <Input
-          {...register("title", { required: "Title is required" })}
+          {...register("title", { 
+            required: "Title is required",
+            maxLength: { value: 100, message: "Title must be less than 100 characters" }
+          })}
           placeholder="Pet Boarding Service"
         />
         {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
@@ -206,7 +217,10 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
       <div>
         <label className="block text-sm font-medium mb-1">Description</label>
         <Textarea
-          {...register("description", { required: "Description is required" })}
+          {...register("description", { 
+            required: "Description is required",
+            maxLength: { value: 1000, message: "Description must be less than 1000 characters" }
+          })}
           placeholder="Describe your service in detail..."
           rows={4}
         />
@@ -226,6 +240,10 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
             pattern: {
               value: /^[0-9]+(\.[0-9]{1,2})?$/,
               message: "Please enter a valid price"
+            },
+            validate: {
+              positive: (value) => parseFloat(value) > 0 || "Price must be greater than 0",
+              maxValue: (value) => parseFloat(value) <= 100000 || "Price cannot exceed ₹1,00,000"
             }
           })}
           type="text"
@@ -244,29 +262,42 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
         
         <div>
           <Input
-            {...register("address")}
+            {...register("address", {
+              maxLength: { value: 500, message: "Address must be less than 500 characters" }
+            })}
             placeholder="Street Address"
           />
+          {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address.message}</p>}
         </div>
         
         <div className="grid grid-cols-3 gap-2">
           <div>
             <Input
-              {...register("city")}
+              {...register("city", {
+                maxLength: { value: 100, message: "City name too long" }
+              })}
               placeholder="City"
             />
           </div>
           <div>
             <Input
-              {...register("state")}
+              {...register("state", {
+                maxLength: { value: 100, message: "State name too long" }
+              })}
               placeholder="State"
             />
           </div>
           <div>
             <Input
-              {...register("zipCode")}
+              {...register("zipCode", {
+                pattern: {
+                  value: /^[0-9]{6}$/,
+                  message: "Enter valid 6-digit PIN code"
+                }
+              })}
               placeholder="PIN Code"
             />
+            {errors.zipCode && <p className="text-red-500 text-xs mt-1">{errors.zipCode.message}</p>}
           </div>
         </div>
       </div>
@@ -302,6 +333,7 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
             <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center">
               <Upload className="h-8 w-8 text-gray-400 mb-2" />
               <p className="text-sm text-gray-500 mb-2">Click to upload or drag and drop</p>
+              <p className="text-xs text-gray-400 mb-2">Maximum file size: 5MB</p>
               <Input
                 type="file"
                 accept="image/*"
@@ -320,10 +352,16 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
           
           <p className="text-xs text-gray-500">Or provide an image URL:</p>
           <Input
-            {...register("imageUrl")}
+            {...register("imageUrl", {
+              pattern: {
+                value: /^https?:\/\/.+\.(jpg|jpeg|png|webp|gif)$/i,
+                message: "Please enter a valid image URL"
+              }
+            })}
             placeholder="https://example.com/image.jpg"
             disabled={!!selectedImage}
           />
+          {errors.imageUrl && <p className="text-red-500 text-xs mt-1">{errors.imageUrl.message}</p>}
         </div>
       </div>
       
