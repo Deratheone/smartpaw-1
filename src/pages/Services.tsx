@@ -6,7 +6,7 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Search } from "lucide-react";
+import { MapPin, Search, X } from "lucide-react";
 import BookingDialog from "@/components/booking/BookingDialog";
 
 interface ServiceProvider {
@@ -211,38 +211,68 @@ const Services = () => {
             <p className="text-lg text-gray-700 max-w-2xl mx-auto">
               Discover trusted pet care services in your area
             </p>
-          </div>
-
-          {/* Search Bar */}
+          </div>          {/* Search and Filter Bar */}
           <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm mb-8">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-grow">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <Input
                   type="text"
-                  placeholder="Search services..."
-                  className="pl-10"
+                  placeholder="Search services, locations, or providers..."
+                  className="pl-10 pr-4 py-2 w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    aria-label="Clear search"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+              
+              {/* Quick Filters */}
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                <button
+                  onClick={() => setSearchQuery('near me')}
+                  className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                >
+                  📍 Near Me
+                </button>
+                <button
+                  onClick={() => setSearchQuery('available today')}
+                  className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                >
+                  ⚡ Available Today
+                </button>
+                <button
+                  onClick={() => setSearchQuery('top rated')}
+                  className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                >
+                  ⭐ Top Rated
+                </button>
               </div>
             </div>
-          </div>
-
-          {/* Service Tabs */}
+          </div>{/* Service Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 h-12 p-1 bg-white border border-gray-200 rounded-lg">
+            <TabsList className="grid w-full grid-cols-2 mb-8 h-auto min-h-[48px] p-1 bg-white border border-gray-200 rounded-lg">
               <TabsTrigger 
                 value="boarding" 
-                className="text-base font-medium py-2 px-4 rounded-md data-[state=active]:bg-smartpaw-purple data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 transition-all duration-200"
+                className="text-sm md:text-base font-medium py-2 px-2 md:px-4 rounded-md data-[state=active]:bg-smartpaw-purple data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 transition-all duration-200 flex items-center justify-center text-center whitespace-nowrap overflow-hidden"
               >
-                Pet Boarding
+                <span className="truncate">Pet Boarding</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="grooming" 
-                className="text-base font-medium py-2 px-4 rounded-md data-[state=active]:bg-smartpaw-purple data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 transition-all duration-200"
+                className="text-sm md:text-base font-medium py-2 px-2 md:px-4 rounded-md data-[state=active]:bg-smartpaw-purple data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 transition-all duration-200 flex items-center justify-center text-center"
               >
-                Pet Grooming (Coming Soon)
+                <span className="truncate">
+                  <span className="block md:hidden">Pet Grooming</span>
+                  <span className="hidden md:block">Pet Grooming (Coming Soon)</span>
+                </span>
               </TabsTrigger>
             </TabsList>
             

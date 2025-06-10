@@ -1,21 +1,26 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { SEO } from "@/components/SEO";
 import { ArrowRight, Bed, MapPin, Calendar, Scissors } from "lucide-react";
 
 const Home = () => {
   return (
     <Layout>
+      <SEO 
+        title="Professional Pet Care Services"
+        description="Trust your furry friend with SmartPaw's verified pet care professionals. From boarding to grooming, we provide comprehensive care with daily updates and peace of mind."
+        keywords="pet boarding, pet grooming, pet monitoring, professional pet care, pet services near me"
+      />
       {/* Hero Section */}
       <section className="py-16 md:py-24 bg-gradient-to-b from-white to-smartpaw-gray">
         <div className="container mx-auto px-4 md:px-6">
+          {/* Logo integrated into the top centered area */}
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
-              {/* Logo integrated into the left side */}
-              <div className="flex items-center justify-center md:justify-start mb-8">
+            <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">              <div className="flex items-center justify-center md:justify-start pt-4 pl-8">
                 <img
                   src="/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png"
-                  alt="SmartPaw Logo"
+                  alt="SmartPaw Logo - Your trusted pet care companion"
                   className="h-24 md:h-28 lg:h-32 w-auto"
                 />
               </div>
@@ -40,7 +45,7 @@ const Home = () => {
                   <img
                     src="/lovable-uploads/f4d6fa06-b043-4d32-ba66-b1e5111cc9b4.png"
                     alt="Happy pets - dog and cat together"
-                    className="w-full h-auto rounded-lg"
+                    className="w-full h-auto rounded-lg max-w-sm mx-auto md:max-w-full"
                   />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-smartpaw-yellow p-4 rounded-lg shadow-lg hidden md:block">
@@ -67,13 +72,12 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <Link to="/services?tab=boarding" className="group">
-              <div className="bg-smartpaw-yellow bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer">
-                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">            <Link to="/services?tab=boarding" className="group">
+              <div className="bg-smartpaw-yellow bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer" role="article" aria-labelledby="boarding-title">
+                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md" aria-hidden="true">
                   <span className="text-3xl">🏨</span>
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
+                <h3 id="boarding-title" className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
                 <p className="text-gray-700 mb-3">Safe and comfortable boarding for your pets</p>
                 <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md">
                   <p className="font-medium">✓ Pet Monitoring Available</p>

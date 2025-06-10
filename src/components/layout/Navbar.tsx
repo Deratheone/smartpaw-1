@@ -43,9 +43,8 @@ const Navbar = () => {
       </TooltipContent>
     </Tooltip>
   );
-
   return (
-    <nav className="bg-background border-b shadow-sm py-4 sticky top-0 z-50">
+    <nav className="bg-background border-b shadow-sm py-4 sticky top-0 z-50 backdrop-blur-md bg-white/95" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-2">
@@ -127,19 +126,29 @@ const Navbar = () => {
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </Button>
           </div>
-        </div>
-
-        {isOpen && (
-          <div className="md:hidden mt-4 pb-4 flex flex-col space-y-4">
-            <Link to="/" className="text-foreground hover:text-smartpaw-purple transition-colors">
+        </div>        {isOpen && (
+          <div className="md:hidden mt-4 pb-4 flex flex-col space-y-4 bg-white border-t border-gray-200 px-4 py-4 rounded-b-lg shadow-lg">
+            <Link 
+              to="/" 
+              className="text-foreground hover:text-smartpaw-purple transition-colors py-2 px-3 rounded-md hover:bg-gray-50 block"
+              onClick={() => setIsOpen(false)}
+            >
               Home
             </Link>
-            <Link to="/services" className="text-foreground hover:text-smartpaw-purple transition-colors">
+            <Link 
+              to="/services" 
+              className="text-foreground hover:text-smartpaw-purple transition-colors py-2 px-3 rounded-md hover:bg-gray-50 block"
+              onClick={() => setIsOpen(false)}
+            >
               Services
             </Link>
-            <span className="text-muted-foreground">Shop (Coming Soon)</span>
-            <span className="text-muted-foreground">Pet Monitoring (Coming Soon)</span>
-            <Link to="/about" className="text-foreground hover:text-smartpaw-purple transition-colors">
+            <span className="text-muted-foreground py-2 px-3 text-sm">Shop (Coming Soon)</span>
+            <span className="text-muted-foreground py-2 px-3 text-sm">Pet Monitoring (Coming Soon)</span>
+            <Link 
+              to="/about" 
+              className="text-foreground hover:text-smartpaw-purple transition-colors py-2 px-3 rounded-md hover:bg-gray-50 block"
+              onClick={() => setIsOpen(false)}
+            >
               About Us
             </Link>
             {user ? (
