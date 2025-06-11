@@ -16,14 +16,14 @@ const LiveFeed: React.FC<LiveFeedProps> = ({
   
   return (
     <div className="bg-gray-100 rounded-md overflow-hidden">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white p-3">
+      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white p-2 sm:p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            <span className="font-medium text-sm">{title}</span>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full animate-pulse"></div>
+            <span className="font-medium text-xs sm:text-sm truncate max-w-[200px] sm:max-w-none">{title}</span>
           </div>
           <div className="flex items-center space-x-1">
-            <Wifi className="h-4 w-4" />
+            <Wifi className="h-3 w-3 sm:h-4 sm:w-4" />
             <span className="text-xs">LIVE</span>
           </div>
         </div>
@@ -49,11 +49,11 @@ const LiveFeed: React.FC<LiveFeedProps> = ({
         />
       </div>
       
-      <div className="p-3 bg-white border-t">
+      <div className="p-2 sm:p-3 bg-white border-t">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center space-x-2">
-            <Play className="h-4 w-4 text-purple-600" />
-            <span className="text-gray-600">SmartPaw Live Demo</span>
+            <Play className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
+            <span className="text-gray-600 text-xs sm:text-sm">SmartPaw Live Demo</span>
           </div>
           <span className="text-xs text-gray-500">
             {username ? `@${username}` : 'Demo Stream'}
