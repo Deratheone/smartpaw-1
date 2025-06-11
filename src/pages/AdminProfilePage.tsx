@@ -325,7 +325,7 @@ const AdminProfilePage = () => {
                               <h4 className="font-medium mb-2">Live Camera Feed - Admin Demo</h4>
                               <LiveFeed 
                                 username="MohdShan105" 
-                                domain="localhost"
+                                domain="smartpaw.vercel.app"
                                 title="Admin Demo - Live Pet Monitoring"
                               />
                             </div>

@@ -232,7 +232,7 @@ const ProfilePage = () => {
                     </TabsContent>                    <TabsContent value="camera">
                       <LiveFeed 
                         username="MohdShan105" 
-                        domain="localhost"
+                        domain="smartpaw.vercel.app"
                         title="Live Pet Monitoring - Demo Stream"
                       />
                     </TabsContent>

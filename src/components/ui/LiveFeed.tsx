@@ -9,7 +9,7 @@ interface LiveFeedProps {
 
 const LiveFeed: React.FC<LiveFeedProps> = ({ 
   username = 'MohdShan105', 
-  domain = 'localhost',
+  domain = 'smartpaw.vercel.app',
   title = 'Live Pet Monitoring Feed'
 }) => {
   const embedUrl = `https://player.twitch.tv/?channel=${username}&parent=${domain}&muted=false`;
