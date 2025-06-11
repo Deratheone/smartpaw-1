@@ -21,6 +21,9 @@ const Register = React.lazy(() => import("./pages/Register"));
 const SellerDashboard = React.lazy(() => import("./pages/SellerDashboard"));
 const ProfilePage = React.lazy(() => import("./pages/ProfilePage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
+const AdminLogin = React.lazy(() => import("./pages/AdminLogin"));
+const AdminSellerDashboard = React.lazy(() => import("./pages/AdminSellerDashboard"));
+const AdminProfilePage = React.lazy(() => import("./pages/AdminProfilePage"));
 
 // Loading component
 const PageLoader = () => (
@@ -41,8 +44,7 @@ const App: React.FC = () => {
               <AuthProvider>
                 <Toaster />
                 <Sonner />
-                <Suspense fallback={<PageLoader />}>
-                <Routes>
+                <Suspense fallback={<PageLoader />}>                <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/services" element={<Services />} />
                   <Route path="/services/:id" element={<ServiceDetail />} />
@@ -53,8 +55,11 @@ const App: React.FC = () => {
                   <Route path="/register" element={<Register />} />
                   <Route path="/seller-dashboard" element={<SellerDashboard />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin/dashboard" element={<AdminSellerDashboard />} />
+                  <Route path="/admin/profile" element={<AdminProfilePage />} />
                   <Route path="*" element={<NotFound />} />
-                </Routes>                </Suspense>
+                </Routes></Suspense>
               </AuthProvider>
             </BrowserRouter>
           </TooltipProvider>

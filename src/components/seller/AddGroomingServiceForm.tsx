@@ -10,9 +10,11 @@ import { useAuth } from "@/hooks/useAuth";
 
 interface AddGroomingServiceFormProps {
   onSuccess: () => void;
+  onCancel?: () => void;
+  adminMode?: boolean;
 }
 
-const AddGroomingServiceForm = ({ onSuccess }: AddGroomingServiceFormProps) => {
+const AddGroomingServiceForm = ({ onSuccess, onCancel, adminMode = false }: AddGroomingServiceFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,9 +29,19 @@ const AddGroomingServiceForm = ({ onSuccess }: AddGroomingServiceFormProps) => {
     state: "",
     zip_code: ""
   });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Admin mode - just simulate success
+    if (adminMode) {
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        onSuccess();
+      }, 1000);
+      return;
+    }
+
     if (!user) return;
 
     setIsSubmitting(true);

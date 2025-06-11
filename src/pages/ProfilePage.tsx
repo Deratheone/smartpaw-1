@@ -41,8 +41,9 @@ import {
   Clock
 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import LiveFeed from "@/components/ui/LiveFeed";
 
-// Placeholder for when we implement the camera component
+// Placeholder for when we implement the camera component - kept for fallback
 const CameraFeed = () => (
   <div className="bg-gray-100 rounded-md p-6 flex flex-col items-center justify-center text-center h-48">
     <Camera size={48} className="text-gray-400 mb-2" />
@@ -228,10 +229,12 @@ const ProfilePage = () => {
                           </div>
                         </div>
                       </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="camera">
-                      <CameraFeed />
+                    </TabsContent>                    <TabsContent value="camera">
+                      <LiveFeed 
+                        username="MohdShan105" 
+                        domain="localhost"
+                        title="Live Pet Monitoring - Demo Stream"
+                      />
                     </TabsContent>
                     
                     <TabsContent value="questions">

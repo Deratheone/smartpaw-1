@@ -11,9 +11,11 @@ import { useAuth } from "@/hooks/useAuth";
 
 interface AddMonitoringServiceFormProps {
   onSuccess: () => void;
+  onCancel?: () => void;
+  adminMode?: boolean;
 }
 
-const AddMonitoringServiceForm = ({ onSuccess }: AddMonitoringServiceFormProps) => {
+const AddMonitoringServiceForm = ({ onSuccess, onCancel, adminMode = false }: AddMonitoringServiceFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,9 +31,19 @@ const AddMonitoringServiceForm = ({ onSuccess }: AddMonitoringServiceFormProps) 
     state: "",
     zip_code: ""
   });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Admin mode - just simulate success
+    if (adminMode) {
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        onSuccess();
+      }, 1000);
+      return;
+    }
+
     if (!user) return;
 
     setIsSubmitting(true);

@@ -20,6 +20,8 @@ interface EditServiceFormProps {
     address?: string;
   };
   onSuccess: () => void;
+  onCancel?: () => void;
+  adminMode?: boolean;
 }
 
 interface FormValues {
@@ -33,7 +35,7 @@ interface FormValues {
   zipCode?: string;
 }
 
-const EditServiceForm = ({ service, onSuccess }: EditServiceFormProps) => {
+const EditServiceForm = ({ service, onSuccess, onCancel, adminMode = false }: EditServiceFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -113,8 +115,17 @@ const EditServiceForm = ({ service, onSuccess }: EditServiceFormProps) => {
       return null;
     }
   };
-
   const onSubmit = async (data: FormValues) => {
+    // Admin mode - just simulate success
+    if (adminMode) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        onSuccess();
+      }, 1000);
+      return;
+    }
+
     if (!user) return;
     
     try {
@@ -302,16 +313,28 @@ const EditServiceForm = ({ service, onSuccess }: EditServiceFormProps) => {
               />
             </>
           )}
-        </div>
-      </div>
+        </div>      </div>
       
-      <Button 
-        type="submit" 
-        className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple"
-        disabled={isLoading}
-      >
-        {isLoading ? "Updating..." : "Update Service"}
-      </Button>
+      <div className="flex gap-4">
+        {onCancel && (
+          <Button 
+            type="button" 
+            variant="outline"
+            onClick={onCancel}
+            className="flex-1"
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+        )}
+        <Button 
+          type="submit" 
+          className={`${onCancel ? 'flex-1' : 'w-full'} bg-smartpaw-purple hover:bg-smartpaw-dark-purple`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Updating..." : adminMode ? "Update Demo Service" : "Update Service"}
+        </Button>
+      </div>
     </form>
   );
 };

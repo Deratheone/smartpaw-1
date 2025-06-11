@@ -12,6 +12,8 @@ import { validateServiceData, sanitizeInput } from "@/utils/security";
 
 interface AddServiceFormProps {
   onSuccess: () => void;
+  onCancel?: () => void;
+  adminMode?: boolean;
 }
 
 interface FormValues {
@@ -25,7 +27,7 @@ interface FormValues {
   zipCode?: string;
 }
 
-const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
+const AddServiceForm = ({ onSuccess, onCancel, adminMode = false }: AddServiceFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -105,6 +107,19 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
   };
 
   const onSubmit = async (data: FormValues) => {
+    // Admin mode - just simulate success
+    if (adminMode) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        reset();
+        setSelectedImage(null);
+        setImagePreview(null);
+        onSuccess();
+      }, 1000);
+      return;
+    }
+
     if (!user) {
       toast({
         title: "Authentication Error",
@@ -365,13 +380,26 @@ const AddServiceForm = ({ onSuccess }: AddServiceFormProps) => {
         </div>
       </div>
       
-      <Button 
-        type="submit" 
-        className="w-full bg-smartpaw-purple hover:bg-smartpaw-dark-purple"
-        disabled={isLoading}
-      >
-        {isLoading ? "Creating..." : "Create Service"}
-      </Button>
+      <div className="flex gap-4">
+        {onCancel && (
+          <Button 
+            type="button" 
+            variant="outline"
+            onClick={onCancel}
+            className="flex-1"
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+        )}
+        <Button 
+          type="submit" 
+          className={`${onCancel ? 'flex-1' : 'w-full'} bg-smartpaw-purple hover:bg-smartpaw-dark-purple`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Creating..." : adminMode ? "Create Demo Service" : "Create Service"}
+        </Button>
+      </div>
     </form>
   );
 };
