@@ -3,8 +3,63 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { SEO } from "@/components/SEO";
 import { ArrowRight, Bed, MapPin, Calendar, Scissors } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const Home = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Simulate loading time and then trigger animations
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      setTimeout(() => setIsVisible(true), 100);
+    }, 1500); // Reduced from 2000ms to 1500ms
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Simple, clean loading component
+  const LoadingScreen = () => (
+    <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
+      <div className="text-center">
+        {/* Logo */}
+        <div className="mb-8">
+          <img
+            src="/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png"
+            alt="SmartPaw Logo"
+            className="h-24 w-auto mx-auto"
+          />
+        </div>
+        
+        {/* Simple spinner */}
+        <div className="relative mb-8">
+          <div className="w-16 h-16 border-4 border-gray-200 border-t-smartpaw-purple rounded-full animate-spin mx-auto"></div>
+        </div>
+        
+        {/* Loading text */}
+        <div>
+          <h3 className="text-2xl font-bold text-smartpaw-purple mb-2">
+            SmartPaw
+          </h3>
+          <p className="text-gray-600">
+            Loading your pet care experience...
+          </p>
+        </div>
+        
+        {/* Simple dots animation */}
+        <div className="flex justify-center space-x-2 mt-6">
+          <div className="w-2 h-2 bg-smartpaw-purple rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+          <div className="w-2 h-2 bg-smartpaw-purple rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+          <div className="w-2 h-2 bg-smartpaw-purple rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
   return (
     <Layout>
       <SEO 
@@ -13,46 +68,46 @@ const Home = () => {
         keywords="pet boarding, pet grooming, pet monitoring, professional pet care, pet services near me"
       />
       {/* Hero Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-white to-smartpaw-gray">
+      <section className={`py-16 md:py-24 bg-gradient-to-b from-white to-smartpaw-gray transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="container mx-auto px-4 md:px-6">
           {/* Logo integrated into the top centered area */}
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+            <div className={`md:w-1/2 mb-10 md:mb-0 md:pr-10 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
               <div className="flex items-center justify-center md:justify-start pt-4 pl-8">
                 <img
                   src="/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png"
                   alt="SmartPaw Logo - Your trusted pet care companion"
-                  className="h-24 md:h-28 lg:h-32 w-auto"
+                  className="h-24 md:h-28 lg:h-32 w-auto hover:scale-110 transition-transform duration-300"
                 />
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
-                Professional <span className="text-smartpaw-purple">Pet Care Services</span>
+                Professional <span className="text-smartpaw-purple bg-gradient-to-r from-smartpaw-purple to-smartpaw-pink bg-clip-text text-transparent animate-pulse">Pet Care Services</span>
               </h1>
               <p className="text-lg text-gray-700 mb-8 max-w-lg">
                 Trust your furry friend with our verified pet care professionals. From boarding to grooming, we provide comprehensive care with daily updates and peace of mind.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/services">
-                  <Button className="bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white px-8 py-6 h-auto text-lg">
-                    Find Pet Services <ArrowRight className="ml-2 h-5 w-5" />
+                  <Button className="bg-smartpaw-purple hover:bg-smartpaw-dark-purple text-white px-8 py-6 h-auto text-lg transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    Find Pet Services <ArrowRight className="ml-2 h-5 w-5 animate-bounce" />
                   </Button>
                 </Link>
               </div>
             </div>
-            <div className="md:w-1/2">
+            <div className={`md:w-1/2 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
               <div className="relative">
-                <div className="rounded-lg overflow-hidden shadow-xl">
+                <div className="rounded-lg overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
                   <img
                     src="/lovable-uploads/f4d6fa06-b043-4d32-ba66-b1e5111cc9b4.png"
                     alt="Happy pets - dog and cat together"
-                    className="w-full h-auto rounded-lg max-w-sm mx-auto md:max-w-full"
+                    className="w-full h-auto rounded-lg max-w-sm mx-auto md:max-w-full hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <div className="absolute -bottom-6 -left-6 bg-smartpaw-yellow p-4 rounded-lg shadow-lg hidden md:block">
+                <div className="absolute -bottom-6 -left-6 bg-smartpaw-yellow p-4 rounded-lg shadow-lg hidden md:block animate-bounce animation-delay-1000">
                   <p className="font-semibold text-gray-800">Trusted Pet Care</p>
                 </div>
-                <div className="absolute -top-6 -right-6 bg-smartpaw-pink p-4 rounded-lg shadow-lg hidden md:block">
+                <div className="absolute -top-6 -right-6 bg-smartpaw-pink p-4 rounded-lg shadow-lg hidden md:block animate-bounce animation-delay-1500">
                   <p className="font-semibold text-gray-800">24/7 Support</p>
                 </div>
               </div>
@@ -62,7 +117,7 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className={`py-16 bg-white transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
@@ -73,9 +128,13 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">            <Link to="/services?tab=boarding" className="group">
-              <div className="bg-smartpaw-yellow bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer" role="article" aria-labelledby="boarding-title">
-                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md" aria-hidden="true">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* Service Cards with staggered animations */}
+            <Link to="/services?tab=boarding" className="group">
+              <div className={`bg-smartpaw-yellow bg-opacity-30 p-8 rounded-xl transition-all duration-500 hover:scale-105 cursor-pointer hover:shadow-xl transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} 
+                   style={{animationDelay: '1000ms'}}
+                   role="article" aria-labelledby="boarding-title">
+                <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md group-hover:animate-bounce" aria-hidden="true">
                   <span className="text-3xl">🏨</span>
                 </div>
                 <h3 id="boarding-title" className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
@@ -88,7 +147,8 @@ const Home = () => {
               </div>
             </Link>
             
-            <div className="group relative">
+            <div className={`group relative transition-all duration-500 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '1200ms'}}>
               <div className="bg-smartpaw-peach bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 cursor-not-allowed opacity-60">
                 <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                   <span className="text-3xl">✂️</span>
@@ -101,7 +161,8 @@ const Home = () => {
               </div>
             </div>
             
-            <div className="bg-smartpaw-green bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
+            <div className={`bg-smartpaw-green bg-opacity-30 p-8 rounded-xl transition-all duration-500 hover:scale-105 opacity-60 cursor-not-allowed transform ${isVisible ? 'opacity-60 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '1400ms'}}>
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🐕</span>
               </div>
@@ -112,7 +173,8 @@ const Home = () => {
               </div>
             </div>
             
-            <div className="bg-smartpaw-blue bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
+            <div className={`bg-smartpaw-blue bg-opacity-30 p-8 rounded-xl transition-all duration-500 hover:scale-105 opacity-60 cursor-not-allowed transform ${isVisible ? 'opacity-60 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '1600ms'}}>
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🏥</span>
               </div>
@@ -123,7 +185,8 @@ const Home = () => {
               </div>
             </div>
             
-            <div className="bg-smartpaw-pink bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
+            <div className={`bg-smartpaw-pink bg-opacity-30 p-8 rounded-xl transition-all duration-500 hover:scale-105 opacity-60 cursor-not-allowed transform ${isVisible ? 'opacity-60 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '1800ms'}}>
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🚕</span>
               </div>
@@ -134,7 +197,8 @@ const Home = () => {
               </div>
             </div>
             
-            <div className="bg-smartpaw-purple bg-opacity-30 p-8 rounded-xl transition-transform duration-300 hover:scale-105 opacity-60 cursor-not-allowed">
+            <div className={`bg-smartpaw-purple bg-opacity-30 p-8 rounded-xl transition-all duration-500 hover:scale-105 opacity-60 cursor-not-allowed transform ${isVisible ? 'opacity-60 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '2000ms'}}>
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-md">
                 <span className="text-3xl">🎓</span>
               </div>
@@ -149,7 +213,7 @@ const Home = () => {
       </section>
 
       {/* Coming Soon Section */}
-      <section className="py-16 bg-gray-50">
+      <section className={`py-16 bg-gray-50 transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
@@ -160,18 +224,24 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 opacity-50">
-            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className={`text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-500 transform hover:scale-105 ${isVisible ? 'opacity-50 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '2200ms'}}>
+              <div className="text-4xl mb-4 animate-pulse">🛍️</div>
               <h3 className="text-xl font-bold mb-2 text-gray-900">Pet Shop</h3>
               <p className="text-gray-600">One-stop shop for all pet supplies and accessories</p>
             </div>
 
-            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
+            <div className={`text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-500 transform hover:scale-105 ${isVisible ? 'opacity-50 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '2400ms'}}>
+              <div className="text-4xl mb-4 animate-pulse">👩‍⚕️</div>
               <h3 className="text-xl font-bold mb-2 text-gray-900">Vet Services</h3>
               <p className="text-gray-600">Connect with verified veterinarians</p>
             </div>
 
-            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
+            <div className={`text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-500 transform hover:scale-105 ${isVisible ? 'opacity-50 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                 style={{animationDelay: '2600ms'}}>
+              <div className="text-4xl mb-4 animate-pulse">📱</div>
               <h3 className="text-xl font-bold mb-2 text-gray-900">Pet Monitoring</h3>
               <p className="text-gray-600 mb-2">Keep track of your pet's health and activities</p>
               <p className="text-sm text-gray-500">Includes live video feed from boarding facilities</p>
@@ -181,7 +251,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-smartpaw-purple">
+      <section className={`py-20 bg-smartpaw-purple transition-all duration-1000 delay-1200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
             Ready to Find Pet Boarding Services?
@@ -190,7 +260,7 @@ const Home = () => {
             Discover trusted boarding services for your furry friend today.
           </p>
           <Link to="/services">
-            <Button className="bg-white text-smartpaw-purple hover:bg-gray-100 px-8 py-6 h-auto text-lg">
+            <Button className="bg-white text-smartpaw-purple hover:bg-gray-100 px-8 py-6 h-auto text-lg transform hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl">
               Browse Services
             </Button>
           </Link>
