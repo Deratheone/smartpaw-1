@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Search, Star, ShoppingCart, Filter } from "lucide-react";
+import { SEO } from "@/components/SEO";
 import {
   Sheet,
   SheetContent,
@@ -176,6 +177,12 @@ const Shop = () => {
 
   return (
     <Layout>
+      <SEO 
+        title="Pet Shop - Food, Toys & Accessories | SmartPaw"
+        description="Shop premium pet supplies including food, toys, accessories, and health products. Quality products for dogs, cats, and small pets with fast delivery."
+        keywords="pet food, dog toys, cat accessories, pet supplies, pet health products, dog food, cat food, pet toys online"
+        url="https://smartpaw.vercel.app/shop"
+      />
       <section className="py-10 bg-gray-50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-10">

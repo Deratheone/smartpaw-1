@@ -112,9 +112,10 @@ const Home = () => {
   return (
     <Layout>
       <SEO 
-        title="Professional Pet Care Services"
-        description="Trust your furry friend with SmartPaw's verified pet care professionals. From boarding to grooming, we provide comprehensive care with daily updates and peace of mind."
-        keywords="pet boarding, pet grooming, pet monitoring, professional pet care, pet services near me"
+        title="SmartPaw - Premium Pet Care Services | Boarding, Grooming & Monitoring"
+        description="Professional pet boarding, grooming, and 24/7 monitoring services. Trusted by pet owners with verified caregivers, daily updates, and complete peace of mind. Book your pet care today!"
+        keywords="pet boarding, pet grooming, pet monitoring, professional pet care, pet services near me, dog boarding, cat boarding, pet sitting, dog grooming, pet daycare"
+        url="https://smartpaw.vercel.app/"
       />
       {/* Hero Section */}
       <motion.section 

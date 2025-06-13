@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Search, X } from "lucide-react";
 import BookingDialog from "@/components/booking/BookingDialog";
+import { SEO } from "@/components/SEO";
 
 interface ServiceProvider {
   id: string;
@@ -201,9 +202,14 @@ const Services = () => {
       </div>
     );
   };
-
   return (
     <Layout>
+      <SEO 
+        title="Pet Services - Boarding, Grooming & Care | SmartPaw"
+        description="Browse and book professional pet services including boarding, grooming, and specialized care. Verified providers with excellent reviews and competitive prices."
+        keywords="pet boarding services, dog grooming, pet daycare, pet sitting, veterinary care, pet services near me, dog boarding, cat grooming"
+        url="https://smartpaw.vercel.app/services"
+      />
       <section className="py-10 bg-gray-50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-10">

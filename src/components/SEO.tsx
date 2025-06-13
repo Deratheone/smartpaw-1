@@ -12,9 +12,9 @@ interface SEOProps {
 export const SEO: React.FC<SEOProps> = ({
   title,
   description,
-  keywords = "pet care, pet services, dog boarding, pet grooming, pet monitoring, veterinary services",
-  image = "/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png",
-  url = window.location.href,
+  keywords = "pet care, pet services, dog boarding, pet grooming, pet monitoring, veterinary services, pet sitting, dog walker, cat boarding, pet daycare",
+  image = "https://smartpaw.vercel.app/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png",
+  url = typeof window !== 'undefined' ? window.location.href : "https://smartpaw.vercel.app",
   type = "website"
 }) => {
   const fullTitle = title.includes('SmartPaw') ? title : `${title} | SmartPaw`;
