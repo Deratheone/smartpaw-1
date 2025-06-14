@@ -9,8 +9,27 @@
   "orientation": "portrait-primary",
   "categories": ["lifestyle", "pets", "services"],
   "lang": "en-US",
-  "dir": "ltr",
-  "icons": [
+  "dir": "ltr",  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
     {
       "src": "/lovable-uploads/2c956147-e853-4ca6-930e-cea856187266.png",
       "sizes": "192x192",
