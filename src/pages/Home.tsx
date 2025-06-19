@@ -428,7 +428,7 @@ const Home = () => {
                 🛍️
               </motion.div>
               <h3 className="text-xl font-bold mb-2 text-gray-900">Pet Shop</h3>
-              <p className="text-gray-600">One-stop shop for all pet supplies and accessories</p>
+              <p className="text-gray-600">One-stop shop for all pet supplies and accessories (Coming Soon)</p>
             </motion.div>
 
             <motion.div 
