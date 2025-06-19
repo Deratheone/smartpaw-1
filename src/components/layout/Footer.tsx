@@ -38,9 +38,9 @@ const Footer = () => {
                 </span>
               </li>
               <li>
-                <Link to="/monitoring" className="text-gray-600 hover:text-smartpaw-purple transition-colors">
-                  Pet Monitoring
-                </Link>
+                <span className="text-gray-400 cursor-not-allowed" title="Coming Soon">
+                  Pet Monitoring (Coming Soon)
+                </span>
               </li>
             </ul>
           </div>

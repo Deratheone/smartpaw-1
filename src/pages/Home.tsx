@@ -267,7 +267,7 @@ const Home = () => {
                 <h3 id="boarding-title" className="text-xl font-bold mb-4 text-gray-900">Pet Boarding</h3>
                 <p className="text-gray-700 mb-3">Safe and comfortable boarding for your pets</p>
                 <div className="text-sm text-gray-600 bg-white bg-opacity-50 p-2 rounded-md">
-                  <p className="font-medium">✓ Pet Monitoring Available</p>
+                  <p className="font-medium">✓ Pet Monitoring Available (Coming Soon)</p>
                   <p className="text-xs">24/7 health and activity tracking during boarding</p>
                   <p className="text-xs text-yellow-700">• Live video feed from shop (Coming Soon)</p>
                 </div>
@@ -478,7 +478,7 @@ const Home = () => {
                 📱
               </motion.div>
               <h3 className="text-xl font-bold mb-2 text-gray-900">Pet Monitoring</h3>
-              <p className="text-gray-600 mb-2">Keep track of your pet's health and activities</p>
+              <p className="text-gray-600 mb-2">Keep track of your pet's health and activities (Coming Soon)</p>
               <p className="text-sm text-gray-500">Includes live video feed from boarding facilities</p>
             </motion.div>
           </motion.div>
