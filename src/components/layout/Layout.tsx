@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 import { Helmet } from "react-helmet";
 import { useAuth } from "@/hooks/auth";
 import { useLocation } from "react-router-dom";
@@ -25,6 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
       </Helmet>
       <Navbar />
       <main className="flex-grow">{children}</main>
+      <ScrollToTop />
       <Footer />
     </div>
   );
